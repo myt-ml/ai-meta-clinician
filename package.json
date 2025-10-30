@@ -1,0 +1,42 @@
+{
+  "name": "ai-meta-clinician",
+  "version": "1.0.0",
+  "description": "AI Meta Clinician - Comprehensive Mental Health Support",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanameltahan-cloud/ai-meta-clinician.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/hanameltahan-cloud/ai-meta-clinician/issues"
+  },
+  "homepage": "https://github.com/hanameltahan-cloud/ai-meta-clinician#readme",
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.79",
+    "@supabase/supabase-js": "^2.77.0",
+    "@types/node": "^24.9.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "autoprefixer": "^10.4.21",
+    "next": "^16.0.1",
+    "postcss": "^8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.16",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.16",
+    "tsx": "^4.20.6"
+  }
+}
