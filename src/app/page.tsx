@@ -17,15 +17,7 @@ import { saveSession, type Session } from "@/lib/session/sessionManager";
 
 export default function HomePage() {
   const [language, setLanguage] = useState<Language>("en");
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "0",
-      role: "ai",
-      text: "Hello, I'm the AI Meta-Clinician. I'm here to provide confidential mental health support. Everything you share is private and secure. How can I help you today?",
-      timestamp: new Date(),
-      riskLevel: "low",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [riskAlert, setRiskAlert] = useState<{
@@ -261,55 +253,43 @@ export default function HomePage() {
           onClose={() => setShowHistory(false)}
         />
       )}
-      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col items-center p-4 py-8">
-        <div className="w-full max-w-4xl space-y-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              AI Meta-Clinician
-            </h1>
-            <p className="text-gray-600">
-              Comprehensive mental health support • Available 24/7 •
-              Multilingual
-            </p>
-          </div>
+      {/* Screen Reader Announcer */}
+      <div
+        id="sr-announcer"
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      />
 
-          {/* Control Bar */}
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
+      <div className="h-screen flex flex-col overflow-hidden bg-white">
+        {/* Header - Mental Health App Style */}
+        <header className="border-b border-subtle bg-white sticky top-0 z-50">
+          <div className="flex items-center justify-between px-4 py-3 md:px-6">
+            <div className="flex items-center gap-3">
+              <div>
+                <h1 className="font-semibold text-primary">MindCare AI</h1>
+                <p className="text-sm text-gray-600">Mental Health Support</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <LanguageToggle current={language} onChange={setLanguage} />
               <button
                 onClick={() => setShowHistory(true)}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                className="text-sm font-medium text-primary hover:underline focus:outline-none"
+                aria-label="Open session history"
               >
-                📋 Session History
+                History
               </button>
-              {!llmStatus.isReady && !llmStatus.isInitializing && (
-                <button
-                  onClick={handleInitLLM}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
-                >
-                  🚀 Enable AI (WebLLM)
-                </button>
-              )}
-              {llmStatus.isInitializing && (
-                <div className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm">
-                  ⏳ {llmStatus.progress || "Initializing AI..."}
-                </div>
-              )}
-              {llmStatus.isReady && (
-                <div className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-sm font-medium flex items-center gap-2">
-                  ✅ AI Enhanced
-                  <button
-                    onClick={() => setUseLLM(!useLLM)}
-                    className="text-xs underline hover:no-underline"
-                  >
-                    {useLLM ? "Disable" : "Enable"}
-                  </button>
-                </div>
-              )}
+              {/* Screening trigger rendered via component */}
+              <PHQForm onSubmit={handlePHQSubmit} language={language} />
             </div>
-            <LanguageToggle current={language} onChange={setLanguage} />
           </div>
+        </header>
+
+        <div className="flex-1 flex flex-col min-h-0">
+          {/* Control Bar - removed to simplify and reduce cognitive load */}
+          <div className="flex-shrink-0 border-b border-subtle bg-white"></div>
 
           {/* Risk Alert */}
           {riskAlert && (
@@ -324,9 +304,11 @@ export default function HomePage() {
             >
               <div className="flex items-start gap-3">
                 <svg
-                  className={`w-6 h-6 flex-shrink-0 ${
+                  className={`w-5 h-5 flex-shrink-0 ${
                     riskAlert.level === "critical" ? "animate-pulse" : ""
                   }`}
+                  width="20"
+                  height="20"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -349,76 +331,93 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* PHQ-9 Screening */}
-          <PHQForm onSubmit={handlePHQSubmit} language={language} />
-
-          {/* Chat Window */}
-          <ChatWindow messages={messages} isLoading={isProcessing} />
-
-          {/* Input Area */}
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && !isProcessing) {
-                    handleUserInput(inputText);
-                  }
-                }}
-                placeholder={
-                  language === "en"
-                    ? "Type your message here..."
-                    : language === "ar_egy"
-                    ? "اكتب رسالتك هنا..."
-                    : "اكتب رسالتك هنا..."
-                }
-                disabled={isProcessing}
-                className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
-              <button
-                onClick={() => handleUserInput(inputText)}
-                disabled={isProcessing || !inputText.trim()}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            {/* Voice Input */}
-            <VoiceInput
-              onTranscribed={handleUserInput}
-              language={language}
-              disabled={isProcessing}
+          {/* Chat Window - Fixed height with scroll */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <ChatWindow
+              messages={messages}
+              isLoading={isProcessing}
+              onStarterPromptClick={handleUserInput}
             />
           </div>
 
-          {/* Emergency Resources */}
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm">
-            <p className="font-semibold text-red-900 mb-2">
-              🆘 Emergency Resources
-            </p>
-            <p className="text-red-800">
-              If you&apos;re in immediate danger or having thoughts of suicide:{" "}
-              <span className="font-bold">Call emergency services (911)</span>{" "}
-              or contact a crisis helpline in your area.
+          {/* Input Area - Mental Health App Style */}
+          <div className="border-t border-gray-200/50 bg-white/80 backdrop-blur-md shadow-lg flex-shrink-0">
+            <div className="max-w-4xl mx-auto px-4 py-3">
+              <div className="flex gap-2 items-end">
+                <VoiceInput
+                  onTranscribed={handleUserInput}
+                  language={language}
+                  disabled={isProcessing}
+                />
+                <textarea
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey && !isProcessing) {
+                      e.preventDefault();
+                      handleUserInput(inputText);
+                    }
+                  }}
+                  placeholder={
+                    language === "en"
+                      ? "Type your message here..."
+                      : language === "ar_egy"
+                      ? "اكتب رسالتك هنا..."
+                      : "اكتب رسالتك هنا..."
+                  }
+                  disabled={isProcessing}
+                  rows={1}
+                  className="flex-1 px-4 py-3 border border-subtle rounded-2xl focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] disabled:bg-gray-50 disabled:cursor-not-allowed transition-all text-sm resize-none shadow-sm bg-white/90"
+                />
+                <button
+                  onClick={() => handleUserInput(inputText)}
+                  disabled={isProcessing || !inputText.trim()}
+                  className="px-4 py-3 bg-[var(--color-primary)] hover:opacity-90 text-white rounded-2xl font-medium disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+                  title="Send message"
+                  aria-label="Send message"
+                >
+                  <svg
+                    className="w-5 h-5 flex-shrink-0"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1.5">
+                Press Enter to send, Shift+Enter for new line
+              </p>
+            </div>
+          </div>
+
+          {/* Emergency Resources - Sticky Bottom */}
+          <div className="bg-alert border-t-2 border-alert px-4 py-2 text-xs flex-shrink-0">
+            <p className="max-w-4xl mx-auto text-alert">
+              <span className="font-semibold">Emergency:</span>
+              <span className="ml-2">
+                If in immediate danger, call
+                <a href="tel:911" className="underline font-semibold ml-1">
+                  911
+                </a>
+                or crisis helpline
+                <a href="tel:988" className="underline font-semibold ml-1">
+                  988
+                </a>
+                .
+              </span>
             </p>
           </div>
         </div>
-      </main>
+      </div>
     </>
   );
 }

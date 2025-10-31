@@ -2,23 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .break-words {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+}
+
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 249, 250, 251;
-  --background-end-rgb: 255, 255, 255;
+  /* Mayo Clinic inspired design tokens */
+  --color-primary: #003da5; /* Mayo Clinic Blue */
+  --color-text: #333333; /* Dark gray for body text */
+  --color-border: #dddddd; /* Subtle dividers */
+  --color-alert: #d90000; /* Alert red */
+  --bg-subtle: #f4f4f4; /* Subtle background for chips */
+  --alert-bg: #fff5f5; /* Gentle alert background */
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  color: var(--color-text);
+  background: #ffffff;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 16px; /* Base size for readability */
+  line-height: 1.5; /* Comfortable reading */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility classes backed by tokens */
+@layer utilities {
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .bg-subtle {
+    background-color: var(--bg-subtle);
+  }
+  .border-subtle {
+    border-color: var(--color-border);
+  }
+  .text-alert {
+    color: var(--color-alert);
+  }
+  .bg-alert {
+    background-color: var(--alert-bg);
+  }
+  .border-alert {
+    border-color: var(--color-alert);
+  }
 }

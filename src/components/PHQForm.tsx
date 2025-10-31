@@ -106,35 +106,23 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full p-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+        className="text-sm font-medium text-primary hover:underline focus:outline-none"
+        aria-label="Open PHQ-9 screening"
       >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-          />
-        </svg>
-        <span>Take Depression Screening (PHQ-9)</span>
+        Screening
       </button>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 rounded-t-2xl">
+        <div className="bg-[var(--color-primary)] text-white p-6 rounded-t-3xl">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h2 className="text-xl font-bold">{title}</h2>
-              <p className="text-sm text-purple-100 mt-1">{subtitle}</p>
+              <p className="text-sm opacity-90 mt-1">{subtitle}</p>
             </div>
             <button
               onClick={() => {
@@ -142,10 +130,12 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
                 setCurrentQuestion(0);
                 setResponses(Array(9).fill(-1));
               }}
-              className="text-white hover:text-purple-200"
+              className="text-white hover:text-blue-200 flex-shrink-0"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 flex-shrink-0"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -161,13 +151,16 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-purple-800 rounded-full h-2">
+          <div
+            className="w-full rounded-full h-2"
+            style={{ backgroundColor: "rgba(255,255,255,0.25)" }}
+          >
             <div
               className="bg-white h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-purple-100 mt-2">
+          <p className="text-xs text-blue-100 mt-2">
             Question {currentQuestion + 1} of 9
           </p>
         </div>
@@ -184,10 +177,10 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
               <button
                 key={index}
                 onClick={() => handleResponse(index)}
-                className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
+                className={`w-full p-4 text-left rounded-2xl border-2 transition-all duration-200 shadow-sm ${
                   responses[currentQuestion] === index
-                    ? "border-purple-600 bg-purple-50 text-purple-900 font-semibold"
-                    : "border-gray-200 hover:border-purple-400 hover:bg-purple-50 text-gray-700"
+                    ? "border-[var(--color-primary)] bg-subtle text-primary font-semibold"
+                    : "border-subtle hover:bg-subtle text-gray-700"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -202,10 +195,12 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
           {currentQuestion > 0 && (
             <button
               onClick={handlePrevious}
-              className="mt-6 px-4 py-2 text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1"
+              className="mt-6 px-0 py-0 text-sm text-primary hover:underline font-medium flex items-center gap-1 transition-all"
             >
               <svg
-                className="w-4 h-4"
+                className="w-5 h-5 flex-shrink-0"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
