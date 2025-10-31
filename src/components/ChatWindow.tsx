@@ -190,14 +190,14 @@ export default function ChatWindow({
                     <p className="text-sm leading-relaxed break-words whitespace-normal">
                       {message.text}
                     </p>
-                    {isClient && (
-                      <p className="text-xs mt-2 text-gray-400">
-                        {new Date(message.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    )}
+                    <p className="text-xs mt-2 text-gray-400">
+                      {isClient
+                        ? new Date(message.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : ""}
+                    </p>
                   </div>
                 </div>
               </div>
