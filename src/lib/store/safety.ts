@@ -1,9 +1,9 @@
 /**
  * Safety Middleware
- * 
+ *
  * Validates all state mutations before they are applied.
  * Enforces clinical safety rules and escalation protocols.
- * 
+ *
  * Safety Checks:
  * - Risk level consistency
  * - Triage category validation
@@ -26,22 +26,47 @@ import type {
  */
 const CRISIS_KEYWORDS = [
   // English
-  "suicide", "kill myself", "end my life", "want to die", "no reason to live",
-  "overdose", "self-harm", "hurt myself", "cut myself", "hang myself",
+  "suicide",
+  "kill myself",
+  "end my life",
+  "want to die",
+  "no reason to live",
+  "overdose",
+  "self-harm",
+  "hurt myself",
+  "cut myself",
+  "hang myself",
   // Arabic (transliterated)
-  "انتحار", "اقتل نفسي", "اريد ان اموت", "لا سبب للعيش",
+  "انتحار",
+  "اقتل نفسي",
+  "اريد ان اموت",
+  "لا سبب للعيش",
   // Spanish
-  "suicidio", "matarme", "quiero morir", "sin razón para vivir",
+  "suicidio",
+  "matarme",
+  "quiero morir",
+  "sin razón para vivir",
   // French
-  "suicide", "me tuer", "veux mourir", "aucune raison de vivre",
+  "suicide",
+  "me tuer",
+  "veux mourir",
+  "aucune raison de vivre",
 ];
 
 /**
  * High-risk keywords for elevated monitoring
  */
 const HIGH_RISK_KEYWORDS = [
-  "depressed", "hopeless", "worthless", "can't go on", "given up",
-  "abuse", "violence", "hurt", "scared", "danger",
+  "depressed",
+  "hopeless",
+  "worthless",
+  "can't go on",
+  "given up",
+  "abuse",
+  "violence",
+  "hurt",
+  "scared",
+  "danger",
 ];
 
 /**
@@ -54,12 +79,12 @@ export function validateMessageSafety(message: Message): {
 } {
   const text = message.text.toLowerCase();
   const flags: string[] = [];
-  
+
   // Check for crisis keywords
   const hasCrisisKeyword = CRISIS_KEYWORDS.some((keyword) =>
     text.includes(keyword.toLowerCase())
   );
-  
+
   if (hasCrisisKeyword) {
     flags.push("crisis_keyword_detected");
     return {
@@ -68,12 +93,12 @@ export function validateMessageSafety(message: Message): {
       flags,
     };
   }
-  
+
   // Check for high-risk keywords
   const hasHighRiskKeyword = HIGH_RISK_KEYWORDS.some((keyword) =>
     text.includes(keyword.toLowerCase())
   );
-  
+
   if (hasHighRiskKeyword) {
     flags.push("high_risk_keyword_detected");
     return {
@@ -82,7 +107,7 @@ export function validateMessageSafety(message: Message): {
       flags,
     };
   }
-  
+
   return {
     safe: true,
     riskLevel: "low",
@@ -107,12 +132,12 @@ export function validateRiskLevelChange(
     high: 2,
     critical: 3,
   };
-  
+
   // Risk can always escalate
   if (riskHierarchy[newLevel] >= riskHierarchy[currentLevel]) {
     return { valid: true };
   }
-  
+
   // De-escalation requires explicit resolution
   // This prevents accidental risk level reduction
   return {
@@ -138,7 +163,7 @@ export function validateTriageCategory(
       suggestedCategory: "crisis",
     };
   }
-  
+
   // High risk should be urgent
   if (riskLevel === "high" && category === "routine") {
     return {
@@ -146,7 +171,7 @@ export function validateTriageCategory(
       suggestedCategory: "urgent",
     };
   }
-  
+
   return { valid: true };
 }
 
@@ -167,7 +192,7 @@ export function validatePHQResponse(
       reason: "Invalid question index (must be 0-8)",
     };
   }
-  
+
   // Check response range
   if (response < 0 || response > 3) {
     return {
@@ -175,7 +200,7 @@ export function validatePHQResponse(
       reason: "Invalid response value (must be 0-3)",
     };
   }
-  
+
   return { valid: true };
 }
 
@@ -188,30 +213,28 @@ export function validatePHQCompletion(phq: PHQState): {
 } {
   // Check all questions answered
   const unanswered = phq.responses.filter((r) => r === -1).length;
-  
+
   if (unanswered > 0) {
     return {
       valid: false,
       reason: `${unanswered} questions remain unanswered`,
     };
   }
-  
+
   return { valid: true };
 }
 
 /**
  * Calculate required escalation based on active risk flags
  */
-export function calculateRequiredEscalation(
-  riskFlags: RiskFlag[]
-): {
+export function calculateRequiredEscalation(riskFlags: RiskFlag[]): {
   riskLevel: RiskLevel;
   triageCategory: TriageCategory;
   requiresImmediate: boolean;
 } {
   // Find highest active risk flag
   const activeFlags = riskFlags.filter((flag) => !flag.resolved);
-  
+
   if (activeFlags.length === 0) {
     return {
       riskLevel: "low",
@@ -219,11 +242,11 @@ export function calculateRequiredEscalation(
       requiresImmediate: false,
     };
   }
-  
+
   const hasCritical = activeFlags.some((flag) => flag.level === "critical");
   const hasHigh = activeFlags.some((flag) => flag.level === "high");
   const hasModerate = activeFlags.some((flag) => flag.level === "moderate");
-  
+
   if (hasCritical) {
     return {
       riskLevel: "critical",
@@ -231,7 +254,7 @@ export function calculateRequiredEscalation(
       requiresImmediate: true,
     };
   }
-  
+
   if (hasHigh) {
     return {
       riskLevel: "high",
@@ -239,7 +262,7 @@ export function calculateRequiredEscalation(
       requiresImmediate: true,
     };
   }
-  
+
   if (hasModerate) {
     return {
       riskLevel: "moderate",
@@ -247,7 +270,7 @@ export function calculateRequiredEscalation(
       requiresImmediate: false,
     };
   }
-  
+
   return {
     riskLevel: "low",
     triageCategory: "routine",
@@ -269,29 +292,29 @@ export function validateSessionState(state: {
   inconsistencies: string[];
 } {
   const inconsistencies: string[] = [];
-  
+
   // Check message count consistency
   if (state.messageCount !== state.actualMessages) {
     inconsistencies.push(
       `Message count mismatch: reported ${state.messageCount}, actual ${state.actualMessages}`
     );
   }
-  
+
   // Check risk level matches flags
   const required = calculateRequiredEscalation(state.riskFlags);
-  
+
   if (required.riskLevel !== state.currentRiskLevel) {
     inconsistencies.push(
       `Risk level inconsistency: should be ${required.riskLevel}, is ${state.currentRiskLevel}`
     );
   }
-  
+
   if (required.triageCategory !== state.triageCategory) {
     inconsistencies.push(
       `Triage category inconsistency: should be ${required.triageCategory}, is ${state.triageCategory}`
     );
   }
-  
+
   return {
     valid: inconsistencies.length === 0,
     inconsistencies,
@@ -300,7 +323,7 @@ export function validateSessionState(state: {
 
 /**
  * Safety middleware wrapper for store actions
- * 
+ *
  * Usage:
  * const safeAction = withSafetyCheck(action, validationFn);
  */
@@ -310,12 +333,12 @@ export function withSafetyCheck<T extends (...args: any[]) => any>(
 ): T {
   return ((...args: Parameters<T>) => {
     const validation = validate(...args);
-    
+
     if (!validation.valid) {
       console.error("Safety check failed:", validation.reason);
       throw new Error(`Safety check failed: ${validation.reason}`);
     }
-    
+
     return action(...args);
   }) as T;
 }

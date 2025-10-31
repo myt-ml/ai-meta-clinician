@@ -1,6 +1,6 @@
 /**
  * Clinical State Store Types
- * 
+ *
  * Type definitions for the global clinical state management system.
  * These types ensure type safety across the entire clinical session lifecycle.
  */
@@ -11,7 +11,7 @@ export type RiskLevel = "low" | "moderate" | "high" | "critical";
 
 export type MessageRole = "user" | "assistant" | "system";
 
-export type TriageCategory = 
+export type TriageCategory =
   | "crisis"
   | "urgent"
   | "routine"
@@ -20,7 +20,7 @@ export type TriageCategory =
 
 export type LLMProvider = "webllm" | "cloud" | "offline";
 
-export type LLMStatus = 
+export type LLMStatus =
   | "initializing"
   | "ready"
   | "loading"
@@ -109,31 +109,31 @@ export interface ClinicalState {
   // Session Management
   session: SessionMetadata | null;
   messages: Message[];
-  
+
   // Language & Localization
   language: Language;
-  
+
   // Safety & Risk
   riskFlags: RiskFlag[];
   currentRiskLevel: RiskLevel;
   triageCategory: TriageCategory;
-  
+
   // Clinical Assessments
   phq: PHQState;
-  
+
   // Voice/ASR
   asr: ASRState;
-  
+
   // LLM Management
   llm: LLMState;
-  
+
   // Audit & Compliance
   auditLog: AuditEvent[];
-  
+
   // Encryption & Security
   encryptionEnabled: boolean;
   encryptionKey?: CryptoKey;
-  
+
   // Persistence
   persistenceEnabled: boolean;
   lastSaved?: number;
@@ -148,31 +148,31 @@ export interface ClinicalActions {
   createSession: (language: Language) => void;
   endSession: () => void;
   updateSessionMetadata: (metadata: Partial<SessionMetadata>) => void;
-  
+
   // Message Actions
   addMessage: (message: Omit<Message, "id" | "timestamp">) => void;
   clearMessages: () => void;
-  
+
   // Language Actions
   setLanguage: (language: Language) => void;
-  
+
   // Risk & Safety Actions
   addRiskFlag: (flag: Omit<RiskFlag, "id" | "timestamp">) => void;
   resolveRiskFlag: (flagId: string) => void;
   updateRiskLevel: (level: RiskLevel) => void;
   setTriageCategory: (category: TriageCategory) => void;
-  
+
   // PHQ Actions
   startPHQ: () => void;
   updatePHQResponse: (questionIndex: number, response: number) => void;
   completePHQ: () => void;
   resetPHQ: () => void;
-  
+
   // ASR Actions
   setASRListening: (isListening: boolean) => void;
   setASRTranscript: (transcript: string, confidence: number) => void;
   setASRError: (error: string) => void;
-  
+
   // LLM Actions
   setLLMProvider: (provider: LLMProvider) => void;
   setLLMStatus: (status: LLMStatus) => void;
@@ -180,20 +180,20 @@ export interface ClinicalActions {
   setLLMStreaming: (isStreaming: boolean) => void;
   setLLMError: (error: string) => void;
   activateFallback: () => void;
-  
+
   // Audit Actions
   logEvent: (event: Omit<AuditEvent, "id" | "timestamp" | "sessionId">) => void;
-  
+
   // Encryption Actions
   enableEncryption: (key: CryptoKey) => void;
   disableEncryption: () => void;
-  
+
   // Persistence Actions
   enablePersistence: () => void;
   disablePersistence: () => void;
   saveState: () => Promise<void>;
   loadState: () => Promise<void>;
-  
+
   // Reset Actions
   resetStore: () => void;
 }

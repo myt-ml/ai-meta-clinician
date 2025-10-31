@@ -1,9 +1,9 @@
 /**
  * Clinical Data Encryption Wrapper
- * 
+ *
  * High-level encryption functions for clinical data types.
  * Integrates encryption layer with clinical state store.
- * 
+ *
  * Encrypted Data Types:
  * - Messages (patient inputs, AI responses)
  * - PHQ-9 responses and scores
@@ -12,7 +12,13 @@
  * - Audit events with sensitive metadata
  */
 
-import type { Message, PHQState, RiskFlag, SessionMetadata, AuditEvent } from "../store/types";
+import type {
+  Message,
+  PHQState,
+  RiskFlag,
+  SessionMetadata,
+  AuditEvent,
+} from "../store/types";
 import { EncryptionUtils, type EncryptedData } from "./encryption";
 
 /**
@@ -65,7 +71,7 @@ export async function encryptMessage(
   key: CryptoKey
 ): Promise<EncryptedMessage> {
   const encryptedText = await EncryptionUtils.encrypt(message.text, key);
-  
+
   return {
     id: message.id,
     role: message.role,
@@ -84,8 +90,11 @@ export async function decryptMessage(
   encryptedMessage: EncryptedMessage,
   key: CryptoKey
 ): Promise<Message> {
-  const text = await EncryptionUtils.decrypt(encryptedMessage.encryptedText, key);
-  
+  const text = await EncryptionUtils.decrypt(
+    encryptedMessage.encryptedText,
+    key
+  );
+
   return {
     id: encryptedMessage.id,
     role: encryptedMessage.role,
@@ -124,8 +133,11 @@ export async function encryptPHQState(
   phq: PHQState,
   key: CryptoKey
 ): Promise<EncryptedPHQState> {
-  const encryptedResponses = await EncryptionUtils.encryptJSON(phq.responses, key);
-  
+  const encryptedResponses = await EncryptionUtils.encryptJSON(
+    phq.responses,
+    key
+  );
+
   return {
     started: phq.started,
     completed: phq.completed,
@@ -149,7 +161,7 @@ export async function decryptPHQState(
     encryptedPHQ.encryptedResponses,
     key
   );
-  
+
   return {
     started: encryptedPHQ.started,
     completed: encryptedPHQ.completed,
@@ -189,7 +201,7 @@ export async function encryptSessionMetadata(
   key: CryptoKey
 ): Promise<EncryptedSessionMetadata> {
   const encryptedRiskFlags = await encryptRiskFlags(session.riskFlags, key);
-  
+
   return {
     id: session.id,
     startTime: session.startTime,
@@ -210,8 +222,11 @@ export async function decryptSessionMetadata(
   encryptedSession: EncryptedSessionMetadata,
   key: CryptoKey
 ): Promise<SessionMetadata> {
-  const riskFlags = await decryptRiskFlags(encryptedSession.encryptedRiskFlags, key);
-  
+  const riskFlags = await decryptRiskFlags(
+    encryptedSession.encryptedRiskFlags,
+    key
+  );
+
   return {
     id: encryptedSession.id,
     startTime: encryptedSession.startTime,
@@ -235,9 +250,12 @@ export async function encryptAuditEvent(
   if (!event.metadata) {
     return event;
   }
-  
-  const encryptedMetadata = await EncryptionUtils.encryptJSON(event.metadata, key);
-  
+
+  const encryptedMetadata = await EncryptionUtils.encryptJSON(
+    event.metadata,
+    key
+  );
+
   return {
     ...event,
     metadata: { encrypted: encryptedMetadata } as any,
@@ -255,12 +273,12 @@ export async function decryptAuditEvent(
   if (!encryptedEvent.metadata || !(encryptedEvent.metadata as any).encrypted) {
     return encryptedEvent;
   }
-  
+
   const metadata = await EncryptionUtils.decryptJSON<Record<string, unknown>>(
     (encryptedEvent.metadata as any).encrypted,
     key
   );
-  
+
   return {
     ...encryptedEvent,
     metadata,
@@ -291,7 +309,7 @@ export async function encryptClinicalSession(
     encryptPHQState(session.phq, key),
     encryptRiskFlags(session.riskFlags, key),
   ]);
-  
+
   return { metadata, messages, phq, riskFlags };
 }
 
@@ -318,7 +336,7 @@ export async function decryptClinicalSession(
     decryptPHQState(encryptedSession.phq, key),
     decryptRiskFlags(encryptedSession.riskFlags, key),
   ]);
-  
+
   return { metadata, messages, phq, riskFlags };
 }
 

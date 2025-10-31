@@ -1,15 +1,15 @@
 /**
  * Clinical Data Encryption Layer
- * 
+ *
  * AES-GCM encryption for sensitive patient data using Web Crypto API.
  * HIPAA-compliant encryption for clinical sessions, messages, and PHQ responses.
- * 
+ *
  * Standards:
  * - Algorithm: AES-GCM (Galois/Counter Mode)
  * - Key size: 256 bits
  * - IV size: 96 bits (12 bytes) - recommended for GCM
  * - Tag size: 128 bits (authentication)
- * 
+ *
  * Security Features:
  * - Authenticated encryption (prevents tampering)
  * - Unique IV per encryption operation
@@ -63,7 +63,7 @@ export async function generateEncryptionKey(): Promise<CryptoKey> {
       true, // extractable
       ["encrypt", "decrypt"]
     );
-    
+
     return key;
   } catch (error) {
     throw new Error(`Failed to generate encryption key: ${error}`);
@@ -77,13 +77,17 @@ export async function generateEncryptionKey(): Promise<CryptoKey> {
 export async function deriveKeyFromPassword(
   params: KeyDerivationParams
 ): Promise<CryptoKey> {
-  const { password, salt, iterations = ENCRYPTION_CONFIG.pbkdf2Iterations } = params;
-  
+  const {
+    password,
+    salt,
+    iterations = ENCRYPTION_CONFIG.pbkdf2Iterations,
+  } = params;
+
   try {
     // Convert password to key material
     const encoder = new TextEncoder();
     const passwordBuffer = encoder.encode(password);
-    
+
     const keyMaterial = await crypto.subtle.importKey(
       "raw",
       passwordBuffer,
@@ -91,10 +95,10 @@ export async function deriveKeyFromPassword(
       false,
       ["deriveBits", "deriveKey"]
     );
-    
+
     // Convert salt
     const saltBuffer = encoder.encode(salt);
-    
+
     // Derive key
     const key = await crypto.subtle.deriveKey(
       {
@@ -111,7 +115,7 @@ export async function deriveKeyFromPassword(
       true,
       ["encrypt", "decrypt"]
     );
-    
+
     return key;
   } catch (error) {
     throw new Error(`Failed to derive key from password: ${error}`);
@@ -138,12 +142,14 @@ export async function encrypt(
 ): Promise<EncryptedData> {
   try {
     // Generate unique IV for this operation
-    const iv = crypto.getRandomValues(new Uint8Array(ENCRYPTION_CONFIG.ivLength));
-    
+    const iv = crypto.getRandomValues(
+      new Uint8Array(ENCRYPTION_CONFIG.ivLength)
+    );
+
     // Convert data to buffer
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(data);
-    
+
     // Encrypt
     const cipherBuffer = await crypto.subtle.encrypt(
       {
@@ -154,7 +160,7 @@ export async function encrypt(
       key,
       dataBuffer
     );
-    
+
     // Return encrypted envelope
     return {
       ciphertext: arrayBufferToBase64(cipherBuffer),
@@ -180,11 +186,11 @@ export async function decrypt(
     if (encryptedData.algorithm !== ENCRYPTION_CONFIG.algorithm) {
       throw new Error(`Unsupported algorithm: ${encryptedData.algorithm}`);
     }
-    
+
     // Convert from base64
     const cipherBuffer = base64ToArrayBuffer(encryptedData.ciphertext);
     const iv = base64ToArrayBuffer(encryptedData.iv);
-    
+
     // Decrypt
     const dataBuffer = await crypto.subtle.decrypt(
       {
@@ -195,7 +201,7 @@ export async function decrypt(
       key,
       cipherBuffer
     );
-    
+
     // Convert buffer to string
     const decoder = new TextDecoder();
     return decoder.decode(dataBuffer);
@@ -309,20 +315,20 @@ export async function validateKey(key: CryptoKey): Promise<boolean> {
     if (key.algorithm.name !== ENCRYPTION_CONFIG.algorithm) {
       return false;
     }
-    
+
     // Check usages
     const hasEncrypt = key.usages.includes("encrypt");
     const hasDecrypt = key.usages.includes("decrypt");
-    
+
     if (!hasEncrypt || !hasDecrypt) {
       return false;
     }
-    
+
     // Try a test encryption/decryption cycle
     const testData = "test";
     const encrypted = await encrypt(testData, key);
     const decrypted = await decrypt(encrypted, key);
-    
+
     return decrypted === testData;
   } catch {
     return false;
@@ -340,7 +346,7 @@ export async function generateSessionKey(): Promise<{
 }> {
   const key = await generateEncryptionKey();
   const id = `key-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
+
   return {
     key,
     id,

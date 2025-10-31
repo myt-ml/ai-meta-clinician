@@ -1,6 +1,6 @@
 /**
  * Security Module
- * 
+ *
  * Clinical-grade encryption and security utilities.
  * HIPAA-compliant data protection for patient information.
  */

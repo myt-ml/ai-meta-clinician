@@ -1,6 +1,6 @@
 /**
  * Clinical State Management
- * 
+ *
  * Export all store-related types, hooks, and utilities.
  */
 

@@ -1,9 +1,9 @@
 /**
  * Clinical State Store
- * 
+ *
  * Global state management for the clinical support system using Zustand.
  * This is the single source of truth for all clinical session data.
- * 
+ *
  * Design Principles:
  * - Immutable updates only
  * - Safety checks before state mutations
@@ -35,15 +35,15 @@ const initialState: ClinicalState = {
   // Session
   session: null,
   messages: [],
-  
+
   // Language
   language: "en",
-  
+
   // Safety & Risk
   riskFlags: [],
   currentRiskLevel: "low",
   triageCategory: "undetermined",
-  
+
   // PHQ Assessment
   phq: {
     started: false,
@@ -51,7 +51,7 @@ const initialState: ClinicalState = {
     currentQuestion: 0,
     responses: Array(9).fill(-1),
   },
-  
+
   // ASR
   asr: {
     isListening: false,
@@ -60,7 +60,7 @@ const initialState: ClinicalState = {
     confidence: 0,
     language: "en",
   },
-  
+
   // LLM
   llm: {
     provider: "webllm",
@@ -69,13 +69,13 @@ const initialState: ClinicalState = {
     isStreaming: false,
     fallbackActive: false,
   },
-  
+
   // Audit
   auditLog: [],
-  
+
   // Security
   encryptionEnabled: false,
-  
+
   // Persistence
   persistenceEnabled: true,
 };
@@ -108,11 +108,11 @@ export const useClinicalStore = create<ClinicalStore>()(
         ...initialState,
 
         // ==================== Session Actions ====================
-        
+
         createSession: (language: Language) => {
           const sessionId = generateId();
           const timestamp = Date.now();
-          
+
           set((state) => ({
             session: {
               id: sessionId,
@@ -130,7 +130,7 @@ export const useClinicalStore = create<ClinicalStore>()(
             currentRiskLevel: "low",
             triageCategory: "undetermined",
           }));
-          
+
           // Log session creation
           get().logEvent({
             type: "session",
@@ -139,10 +139,10 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         endSession: () => {
           const state = get();
-          
+
           // Log session end
           if (state.session) {
             get().logEvent({
@@ -156,14 +156,14 @@ export const useClinicalStore = create<ClinicalStore>()(
               encrypted: state.encryptionEnabled,
             });
           }
-          
+
           set({ session: null });
         },
-        
+
         updateSessionMetadata: (metadata: Partial<SessionMetadata>) => {
           set((state) => {
             if (!state.session) return state;
-            
+
             return {
               session: {
                 ...state.session,
@@ -175,7 +175,7 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Message Actions ====================
-        
+
         addMessage: (message) => {
           const newMessage: Message = {
             ...message,
@@ -184,7 +184,7 @@ export const useClinicalStore = create<ClinicalStore>()(
             language: get().language,
             encrypted: get().encryptionEnabled,
           };
-          
+
           set((state) => ({
             messages: [...state.messages, newMessage],
             session: state.session
@@ -195,7 +195,7 @@ export const useClinicalStore = create<ClinicalStore>()(
                 }
               : null,
           }));
-          
+
           // Log message
           get().logEvent({
             type: "message",
@@ -207,10 +207,10 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         clearMessages: () => {
           set({ messages: [] });
-          
+
           get().logEvent({
             type: "message",
             action: "clear",
@@ -219,13 +219,13 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Language Actions ====================
-        
+
         setLanguage: (language: Language) => {
           set({
             language,
             asr: { ...get().asr, language },
           });
-          
+
           get().logEvent({
             type: "language",
             action: "change",
@@ -235,14 +235,14 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Risk & Safety Actions ====================
-        
+
         addRiskFlag: (flag) => {
           const newFlag: RiskFlag = {
             ...flag,
             id: generateId(),
             timestamp: Date.now(),
           };
-          
+
           set((state) => ({
             riskFlags: [...state.riskFlags, newFlag],
             session: state.session
@@ -252,17 +252,17 @@ export const useClinicalStore = create<ClinicalStore>()(
                 }
               : null,
           }));
-          
+
           // Auto-escalate risk level if needed
           if (flag.level === "critical" || flag.level === "high") {
             get().updateRiskLevel(flag.level);
           }
-          
+
           // Auto-triage to crisis if critical
           if (flag.level === "critical") {
             get().setTriageCategory("crisis");
           }
-          
+
           get().logEvent({
             type: "risk",
             action: "flag",
@@ -273,14 +273,14 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         resolveRiskFlag: (flagId: string) => {
           set((state) => ({
             riskFlags: state.riskFlags.map((flag) =>
               flag.id === flagId ? { ...flag, resolved: true } : flag
             ),
           }));
-          
+
           get().logEvent({
             type: "risk",
             action: "resolve",
@@ -288,10 +288,10 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         updateRiskLevel: (level: RiskLevel) => {
           set({ currentRiskLevel: level });
-          
+
           get().logEvent({
             type: "risk",
             action: "update_level",
@@ -299,7 +299,7 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         setTriageCategory: (category: TriageCategory) => {
           set((state) => ({
             triageCategory: category,
@@ -307,7 +307,7 @@ export const useClinicalStore = create<ClinicalStore>()(
               ? { ...state.session, triageCategory: category }
               : null,
           }));
-          
+
           get().logEvent({
             type: "triage",
             action: "categorize",
@@ -317,7 +317,7 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== PHQ Actions ====================
-        
+
         startPHQ: () => {
           set({
             phq: {
@@ -327,19 +327,19 @@ export const useClinicalStore = create<ClinicalStore>()(
               responses: Array(9).fill(-1),
             },
           });
-          
+
           get().logEvent({
             type: "assessment",
             action: "phq_start",
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         updatePHQResponse: (questionIndex: number, response: number) => {
           set((state) => {
             const newResponses = [...state.phq.responses];
             newResponses[questionIndex] = response;
-            
+
             return {
               phq: {
                 ...state.phq,
@@ -349,12 +349,15 @@ export const useClinicalStore = create<ClinicalStore>()(
             };
           });
         },
-        
+
         completePHQ: () => {
           const state = get();
-          const totalScore = state.phq.responses.reduce((sum, val) => sum + val, 0);
+          const totalScore = state.phq.responses.reduce(
+            (sum, val) => sum + val,
+            0
+          );
           const severity = calculatePHQSeverity(totalScore);
-          
+
           set({
             phq: {
               ...state.phq,
@@ -367,7 +370,7 @@ export const useClinicalStore = create<ClinicalStore>()(
               ? { ...state.session, phqScore: totalScore }
               : null,
           });
-          
+
           // Add risk flag if severe depression detected
           if (totalScore >= 15) {
             get().addRiskFlag({
@@ -377,7 +380,7 @@ export const useClinicalStore = create<ClinicalStore>()(
               notes: `PHQ-9 score: ${totalScore} (${severity})`,
             });
           }
-          
+
           get().logEvent({
             type: "assessment",
             action: "phq_complete",
@@ -388,7 +391,7 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: get().encryptionEnabled,
           });
         },
-        
+
         resetPHQ: () => {
           set({
             phq: {
@@ -401,32 +404,41 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== ASR Actions ====================
-        
+
         setASRListening: (isListening: boolean) => {
           set((state) => ({
-            asr: { ...state.asr, isListening, transcript: isListening ? "" : state.asr.transcript },
+            asr: {
+              ...state.asr,
+              isListening,
+              transcript: isListening ? "" : state.asr.transcript,
+            },
           }));
         },
-        
+
         setASRTranscript: (transcript: string, confidence: number) => {
           set((state) => ({
             asr: { ...state.asr, transcript, confidence, isProcessing: false },
           }));
         },
-        
+
         setASRError: (error: string) => {
           set((state) => ({
-            asr: { ...state.asr, error, isListening: false, isProcessing: false },
+            asr: {
+              ...state.asr,
+              error,
+              isListening: false,
+              isProcessing: false,
+            },
           }));
         },
 
         // ==================== LLM Actions ====================
-        
+
         setLLMProvider: (provider: LLMProvider) => {
           set((state) => ({
             llm: { ...state.llm, provider },
           }));
-          
+
           get().logEvent({
             type: "llm",
             action: "provider_change",
@@ -434,31 +446,35 @@ export const useClinicalStore = create<ClinicalStore>()(
             encrypted: false,
           });
         },
-        
+
         setLLMStatus: (status: LLMStatus) => {
           set((state) => ({
             llm: { ...state.llm, status },
           }));
         },
-        
+
         setLLMModel: (modelName: string) => {
           set((state) => ({
             llm: { ...state.llm, modelName },
           }));
         },
-        
+
         setLLMStreaming: (isStreaming: boolean) => {
           set((state) => ({
-            llm: { ...state.llm, isStreaming, lastInference: isStreaming ? undefined : Date.now() },
+            llm: {
+              ...state.llm,
+              isStreaming,
+              lastInference: isStreaming ? undefined : Date.now(),
+            },
           }));
         },
-        
+
         setLLMError: (error: string) => {
           set((state) => ({
             llm: { ...state.llm, error, status: "error" },
           }));
         },
-        
+
         activateFallback: () => {
           set((state) => ({
             llm: {
@@ -468,7 +484,7 @@ export const useClinicalStore = create<ClinicalStore>()(
               status: "ready",
             },
           }));
-          
+
           get().logEvent({
             type: "llm",
             action: "fallback_activated",
@@ -478,37 +494,37 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Audit Actions ====================
-        
+
         logEvent: (event) => {
           const state = get();
-          
+
           const auditEvent: AuditEvent = {
             ...event,
             id: generateId(),
             timestamp: Date.now(),
             sessionId: state.session?.id || "no-session",
           };
-          
+
           set((state) => ({
             auditLog: [...state.auditLog, auditEvent],
           }));
         },
 
         // ==================== Encryption Actions ====================
-        
+
         enableEncryption: (key: CryptoKey) => {
           set({
             encryptionEnabled: true,
             encryptionKey: key,
           });
-          
+
           get().logEvent({
             type: "security",
             action: "encryption_enabled",
             encrypted: false,
           });
         },
-        
+
         disableEncryption: () => {
           set({
             encryptionEnabled: false,
@@ -517,35 +533,35 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Persistence Actions ====================
-        
+
         enablePersistence: () => {
           set({ persistenceEnabled: true });
         },
-        
+
         disablePersistence: () => {
           set({ persistenceEnabled: false });
         },
-        
+
         saveState: async () => {
           const state = get();
           if (!state.persistenceEnabled) return;
-          
+
           // TODO: Implement IndexedDB persistence with encryption
           set({ lastSaved: Date.now() });
-          
+
           get().logEvent({
             type: "persistence",
             action: "save",
             encrypted: state.encryptionEnabled,
           });
         },
-        
+
         loadState: async () => {
           const state = get();
           if (!state.persistenceEnabled) return;
-          
+
           // TODO: Implement IndexedDB loading with decryption
-          
+
           get().logEvent({
             type: "persistence",
             action: "load",
@@ -554,14 +570,14 @@ export const useClinicalStore = create<ClinicalStore>()(
         },
 
         // ==================== Reset Actions ====================
-        
+
         resetStore: () => {
           get().logEvent({
             type: "system",
             action: "reset",
             encrypted: false,
           });
-          
+
           set(initialState);
         },
       }),
@@ -590,8 +606,10 @@ export const useClinicalStore = create<ClinicalStore>()(
 export const useSession = () => useClinicalStore((state) => state.session);
 export const useMessages = () => useClinicalStore((state) => state.messages);
 export const useLanguage = () => useClinicalStore((state) => state.language);
-export const useRiskLevel = () => useClinicalStore((state) => state.currentRiskLevel);
+export const useRiskLevel = () =>
+  useClinicalStore((state) => state.currentRiskLevel);
 export const usePHQState = () => useClinicalStore((state) => state.phq);
 export const useASRState = () => useClinicalStore((state) => state.asr);
 export const useLLMState = () => useClinicalStore((state) => state.llm);
-export const useTriageCategory = () => useClinicalStore((state) => state.triageCategory);
+export const useTriageCategory = () =>
+  useClinicalStore((state) => state.triageCategory);
