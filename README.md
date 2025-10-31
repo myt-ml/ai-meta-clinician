@@ -134,6 +134,7 @@ Provide affordable, high-quality mental health care to extremely low-income coun
 - Node.js 22+ (current LTS)
 - npm or yarn
 - Modern browser (Chrome, Edge, Safari)
+- Ollama (optional, for local AI enhancements)
 
 ### Installation
 
@@ -156,6 +157,21 @@ npm test -- --watch
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Language Selection
+
+The app now features **three separate language interfaces**:
+
+- **`/` (Landing)** - Language selector page
+- **`/en`** - Full English interface
+- **`/ar`** - Modern Standard Arabic (العربية الفصحى)  
+- **`/ar-egy`** - Egyptian Colloquial Arabic (العامية المصرية)
+
+Each interface has:
+- ✅ Fixed language (no mid-session switching)
+- ✅ Proper RTL/LTR support
+- ✅ Culturally appropriate translations
+- ✅ Language-specific crisis resources
 
 ### Build for Production
 
@@ -301,12 +317,16 @@ Always displayed:
 - [x] Synthetic test dataset (60 cases)
 - [ ] Local testing & validation
 
-### Phase 2: AI Integration (Next)
+### Phase 2: AI Integration & Multi-Language (IN PROGRESS)
 
-- [ ] WebLLM integration (Llama-3.2-1B)
+- [x] ~~WebLLM integration~~ → **Ollama integration** (completed)
+- [x] **Multi-Language UI** - Separate interfaces for EN, MSA, EG Arabic
+- [x] **i18n Translation System** - Centralized translations
+- [x] **Language Selector** - Beautiful landing page
+- [x] **RTL Support** - Proper Arabic text direction
 - [ ] Supabase database setup
-- [ ] User authentication
-- [ ] Session persistence
+- [ ] User authentication  
+- [ ] Session persistence (localStorage working, cloud pending)
 - [ ] GAD-7 anxiety screening
 
 ### Phase 3: Clinical Validation

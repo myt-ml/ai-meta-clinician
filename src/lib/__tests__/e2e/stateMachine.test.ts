@@ -14,7 +14,7 @@ const TEST_TIMEOUT = 5000;
  * State Machine Definition
  *
  * States: idle, listening, processing, crisis, emergency_lock
- * 
+ *
  * Transitions:
  * - idle → listening (user input starts)
  * - listening → processing (voice captured)
@@ -59,8 +59,14 @@ class MockStateMachine implements StateMachine {
   constructor() {
     // Define legal transitions
     this.transitions.set("idle", new Set(["listening", "emergency_lock"]));
-    this.transitions.set("listening", new Set(["processing", "idle", "crisis", "emergency_lock"]));
-    this.transitions.set("processing", new Set(["idle", "crisis", "emergency_lock"]));
+    this.transitions.set(
+      "listening",
+      new Set(["processing", "idle", "crisis", "emergency_lock"])
+    );
+    this.transitions.set(
+      "processing",
+      new Set(["idle", "crisis", "emergency_lock"])
+    );
     this.transitions.set("crisis", new Set(["idle", "emergency_lock"]));
     this.transitions.set("emergency_lock", new Set(["idle"])); // Manual reset only
 
@@ -80,7 +86,10 @@ class MockStateMachine implements StateMachine {
     }
 
     // Crisis override: can transition to crisis from processing or listening
-    if (to === "crisis" && (this.currentState === "processing" || this.currentState === "listening")) {
+    if (
+      to === "crisis" &&
+      (this.currentState === "processing" || this.currentState === "listening")
+    ) {
       this.previousState = this.currentState;
       this.currentState = to;
       this.startTime = Date.now();
@@ -362,37 +371,108 @@ describe("State Machine Transition Tests", () => {
 
   describe("Transition Table Validation", () => {
     it("should have complete transition table", () => {
-      const allStates: State[] = ["idle", "listening", "processing", "crisis", "emergency_lock"];
+      const allStates: State[] = [
+        "idle",
+        "listening",
+        "processing",
+        "crisis",
+        "emergency_lock",
+      ];
       const transitionTable: Transition[] = [
         // From idle
         { from: "idle", to: "listening", trigger: "user_input", allowed: true },
         { from: "idle", to: "processing", trigger: "skip", allowed: false },
         { from: "idle", to: "crisis", trigger: "skip", allowed: false },
-        { from: "idle", to: "emergency_lock", trigger: "override", allowed: true },
+        {
+          from: "idle",
+          to: "emergency_lock",
+          trigger: "override",
+          allowed: true,
+        },
 
         // From listening
         { from: "listening", to: "idle", trigger: "cancel", allowed: true },
-        { from: "listening", to: "processing", trigger: "voice_captured", allowed: true },
-        { from: "listening", to: "crisis", trigger: "immediate_risk", allowed: true },
-        { from: "listening", to: "emergency_lock", trigger: "override", allowed: true },
+        {
+          from: "listening",
+          to: "processing",
+          trigger: "voice_captured",
+          allowed: true,
+        },
+        {
+          from: "listening",
+          to: "crisis",
+          trigger: "immediate_risk",
+          allowed: true,
+        },
+        {
+          from: "listening",
+          to: "emergency_lock",
+          trigger: "override",
+          allowed: true,
+        },
 
         // From processing
-        { from: "processing", to: "idle", trigger: "response_complete", allowed: true },
-        { from: "processing", to: "listening", trigger: "back", allowed: false },
-        { from: "processing", to: "crisis", trigger: "high_risk", allowed: true },
-        { from: "processing", to: "emergency_lock", trigger: "override", allowed: true },
+        {
+          from: "processing",
+          to: "idle",
+          trigger: "response_complete",
+          allowed: true,
+        },
+        {
+          from: "processing",
+          to: "listening",
+          trigger: "back",
+          allowed: false,
+        },
+        {
+          from: "processing",
+          to: "crisis",
+          trigger: "high_risk",
+          allowed: true,
+        },
+        {
+          from: "processing",
+          to: "emergency_lock",
+          trigger: "override",
+          allowed: true,
+        },
 
         // From crisis
         { from: "crisis", to: "idle", trigger: "resolved", allowed: true },
         { from: "crisis", to: "listening", trigger: "back", allowed: false },
         { from: "crisis", to: "processing", trigger: "back", allowed: false },
-        { from: "crisis", to: "emergency_lock", trigger: "override", allowed: true },
+        {
+          from: "crisis",
+          to: "emergency_lock",
+          trigger: "override",
+          allowed: true,
+        },
 
         // From emergency_lock
-        { from: "emergency_lock", to: "idle", trigger: "manual_reset", allowed: true },
-        { from: "emergency_lock", to: "listening", trigger: "auto", allowed: false },
-        { from: "emergency_lock", to: "processing", trigger: "auto", allowed: false },
-        { from: "emergency_lock", to: "crisis", trigger: "auto", allowed: false },
+        {
+          from: "emergency_lock",
+          to: "idle",
+          trigger: "manual_reset",
+          allowed: true,
+        },
+        {
+          from: "emergency_lock",
+          to: "listening",
+          trigger: "auto",
+          allowed: false,
+        },
+        {
+          from: "emergency_lock",
+          to: "processing",
+          trigger: "auto",
+          allowed: false,
+        },
+        {
+          from: "emergency_lock",
+          to: "crisis",
+          trigger: "auto",
+          allowed: false,
+        },
       ];
 
       transitionTable.forEach(({ from, to, trigger, allowed }) => {
