@@ -151,8 +151,10 @@ export async function queryAuditLogs(
     for (const event of allLogs) {
       // Apply filters
       if (filter.sessionId && event.sessionId !== filter.sessionId) continue;
-      if (filter.category && !filter.category.includes(event.category)) continue;
-      if (filter.severity && !filter.severity.includes(event.severity)) continue;
+      if (filter.category && !filter.category.includes(event.category))
+        continue;
+      if (filter.severity && !filter.severity.includes(event.severity))
+        continue;
       if (filter.startTime && event.timestamp < filter.startTime) continue;
       if (filter.endTime && event.timestamp > filter.endTime) continue;
       if (

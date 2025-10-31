@@ -5,6 +5,7 @@
  * - Attempts LLM inference first (WebLLM or Cloud)
  * - Gracefully falls back to rule-based mhGAP protocols
  * - Maintains clinical safety regardless of mode
+ * - Validates all outputs before delivery
  */
 
 import type { Message, ClinicalState, Language } from "../store/types";
@@ -20,6 +21,12 @@ import {
   isModelReady,
   type LLMResponse,
 } from "../llm";
+import {
+  validateResponse,
+  enforceDisclaimer,
+  sanitizeResponse,
+  containsMedicalAdvice,
+} from "../validation";
 
 /**
  * Reasoning result
@@ -121,7 +128,28 @@ export function generateOfflineResponse(
   const assessment = assessMessage(userMessage, messages, currentRiskLevel);
 
   // 2. GENERATE RESPONSE
-  const response = generateMhgapResponse(assessment, language);
+  let response = generateMhgapResponse(assessment, language);
+
+  // 2a. VALIDATE OFFLINE RESPONSE
+  const validation = validateResponse(response, {
+    riskLevel: assessment.riskLevel,
+    language,
+    isAssessment: false,
+    containsMedication: containsMedicalAdvice(response),
+  });
+
+  // Apply validation changes
+  if (validation.modifiedContent) {
+    response = validation.modifiedContent;
+  }
+
+  // 2b. ENFORCE DISCLAIMER
+  response = enforceDisclaimer(response, {
+    riskLevel: assessment.riskLevel,
+    language,
+    isCrisis: assessment.requiresEmergency,
+    containsMedication: containsMedicalAdvice(response),
+  });
 
   // 3. DETERMINE ACTION REQUIRED
   let actionRequired: ReasoningResult["actionRequired"] = "none";

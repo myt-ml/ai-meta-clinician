@@ -13,6 +13,7 @@ import { runStorageTests } from "@/lib/__tests__/storage.test";
 import { runReasoningTests } from "@/lib/__tests__/reasoning.test";
 import { runLLMTests } from "@/lib/__tests__/llm.test";
 import { runAuditTests } from "@/lib/__tests__/audit.test";
+import { runValidationTests } from "@/lib/__tests__/validation.test";
 
 interface TestResult {
   totalTests: number;
@@ -31,6 +32,9 @@ export default function TestRunnerPage() {
   );
   const [llmResults, setLlmResults] = useState<boolean | null>(null);
   const [auditResults, setAuditResults] = useState<boolean | null>(null);
+  const [validationResults, setValidationResults] = useState<TestResult | null>(
+    null
+  );
   const [running, setRunning] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -63,6 +67,7 @@ export default function TestRunnerPage() {
     setReasoningResults(null);
     setLlmResults(null);
     setAuditResults(null);
+    setValidationResults(null);
 
     try {
       // Run encryption tests
@@ -92,6 +97,19 @@ export default function TestRunnerPage() {
       } catch (auditError) {
         setAuditResults(false);
       }
+
+      // Run Validation tests
+      const validationTestResults = await runValidationTests();
+      setValidationResults({
+        totalTests: validationTestResults.passed + validationTestResults.failed,
+        passed: validationTestResults.passed,
+        failed: validationTestResults.failed,
+        results: validationTestResults.results.map((r) => ({
+          name: r.name,
+          pass: r.passed,
+          message: r.error || "Test passed",
+        })),
+      });
     } catch (error) {
       console.error("Test suite error:", error);
     } finally {
@@ -133,8 +151,9 @@ export default function TestRunnerPage() {
           storageResults !== null ||
           reasoningResults !== null ||
           llmResults !== null ||
-          auditResults !== null) && (
-          <div className="grid grid-cols-5 gap-4 mb-6">
+          auditResults !== null ||
+          validationResults !== null) && (
+          <div className="grid grid-cols-6 gap-4 mb-6">
             {/* Encryption Results */}
             <div
               className={`border rounded-lg p-6 ${
@@ -279,6 +298,35 @@ export default function TestRunnerPage() {
                   : "Some audit tests failed"}
               </p>
             </div>
+
+            {/* Validation Results */}
+            <div
+              className={`border rounded-lg p-6 ${
+                validationResults === null
+                  ? "bg-surface border-border"
+                  : validationResults.passed === validationResults.totalTests
+                  ? "bg-green-50 border-green-300"
+                  : "bg-red-50 border-red-300"
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">
+                  {validationResults === null
+                    ? "⏳"
+                    : validationResults.passed === validationResults.totalTests
+                    ? "✅"
+                    : "❌"}
+                </span>
+                <h3 className="text-h3 font-semibold text-textMain">
+                  Validation Layer
+                </h3>
+              </div>
+              <p className="text-caption text-textSubtle">
+                {validationResults === null
+                  ? "Waiting..."
+                  : `${validationResults.passed}/${validationResults.totalTests} tests passed`}
+              </p>
+            </div>
           </div>
         )}
 
@@ -290,6 +338,35 @@ export default function TestRunnerPage() {
             </h3>
             <div className="space-y-2">
               {reasoningResults.results.map((result, idx) => (
+                <div
+                  key={idx}
+                  className={`flex items-start gap-3 p-3 rounded ${
+                    result.pass ? "bg-green-50" : "bg-red-50"
+                  }`}
+                >
+                  <span className="text-xl">{result.pass ? "✅" : "❌"}</span>
+                  <div className="flex-1">
+                    <div className="font-medium text-textMain">
+                      {result.name}
+                    </div>
+                    <div className="text-sm text-textSubtle">
+                      {result.message}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Validation Test Details */}
+        {validationResults && (
+          <div className="bg-surface border border-border rounded-lg p-6 mb-6">
+            <h3 className="text-h2 font-semibold text-textMain mb-4">
+              Validation Tests Detailed Results
+            </h3>
+            <div className="space-y-2">
+              {validationResults.results.map((result, idx) => (
                 <div
                   key={idx}
                   className={`flex items-start gap-3 p-3 rounded ${
@@ -347,7 +424,8 @@ export default function TestRunnerPage() {
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-body text-textMain">
             <strong>Next Step:</strong> Once all tests pass (encryption,
-            storage, reasoning, LLM, audit), we'll proceed to Layer 8 (Controlled Clinical Outputs).
+            storage, reasoning, LLM, audit), we'll proceed to Layer 8
+            (Controlled Clinical Outputs).
           </p>
         </div>
       </div>

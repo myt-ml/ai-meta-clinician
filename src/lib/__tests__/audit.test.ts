@@ -76,7 +76,11 @@ export async function runAuditTests(): Promise<void> {
     console.log("✓ Safety Escalation Logging");
     const { logSafetyEscalation } = await import("../audit");
 
-    await logSafetyEscalation("high", "suicide ideation keywords", "test-session-3");
+    await logSafetyEscalation(
+      "high",
+      "suicide ideation keywords",
+      "test-session-3"
+    );
 
     passedTests++;
   } catch (error) {
