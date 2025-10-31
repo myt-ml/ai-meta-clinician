@@ -27,7 +27,15 @@
     "validatedBy": "clinical-supervisor",
     "validationDate": "2025-10-31",
     "notes": "Imminent suicide risk in Arabic - plan, means, intent all present",
-    "tags": ["suicide", "crisis", "emergency", "plan", "means", "intent", "MSA"],
+    "tags": [
+      "suicide",
+      "crisis",
+      "emergency",
+      "plan",
+      "means",
+      "intent",
+      "MSA"
+    ],
     "dialect": "MSA",
     "columbiaScore": 6,
     "requiresSupervisorNotification": true

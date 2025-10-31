@@ -30,10 +30,18 @@ function detectLanguage(text: string): Language {
  */
 function hasEgyptianDialect(text: string): boolean {
   const egyptianMarkers = [
-    "يا دكتور", "تعبان", "مش عارف", "خالص",
-    "بايظة", "عايز", "إيه", "امبارح", "عشان", "بيقولوا",
+    "يا دكتور",
+    "تعبان",
+    "مش عارف",
+    "خالص",
+    "بايظة",
+    "عايز",
+    "إيه",
+    "امبارح",
+    "عشان",
+    "بيقولوا",
   ];
-  return egyptianMarkers.some(marker => text.includes(marker));
+  return egyptianMarkers.some((marker) => text.includes(marker));
 }
 
 /**
@@ -41,7 +49,7 @@ function hasEgyptianDialect(text: string): boolean {
  */
 function hasLevantineDialect(text: string): boolean {
   const levantineMarkers = ["حاسس", "منيح", "شو", "كيفك", "بدي"];
-  return levantineMarkers.some(marker => text.includes(marker));
+  return levantineMarkers.some((marker) => text.includes(marker));
 }
 
 /**
@@ -56,7 +64,11 @@ function getExpectedModel(lang: Language): "llama3.2" | "qwen2.5" {
  */
 interface LanguageTestCase {
   id: string;
-  category: "basic-switching" | "crisis-consistency" | "dialect-handling" | "cultural-context";
+  category:
+    | "basic-switching"
+    | "crisis-consistency"
+    | "dialect-handling"
+    | "cultural-context";
   description: string;
   input: string;
   language: Language;
@@ -409,16 +421,22 @@ export async function testLanguageSwitching(): Promise<void> {
   console.log(`Total Tests: ${results.totalTests}`);
   console.log(`Passed: ${results.passed}`);
   console.log(`Failed: ${results.failed}`);
-  console.log(`Success Rate: ${((results.passed / results.totalTests) * 100).toFixed(1)}%\n`);
+  console.log(
+    `Success Rate: ${((results.passed / results.totalTests) * 100).toFixed(
+      1
+    )}%\n`
+  );
 
   // Log each test result
   for (const result of results.results) {
     const status = result.success ? "[OK]" : "[ERROR]";
-    console.log(`${status} ${result.testCase.id}: ${result.testCase.description}`);
+    console.log(
+      `${status} ${result.testCase.id}: ${result.testCase.description}`
+    );
 
     if (!result.success) {
       console.log(`  Errors:`);
-      result.errors.forEach(err => console.log(`    - ${err}`));
+      result.errors.forEach((err) => console.log(`    - ${err}`));
     }
 
     if (result.results.riskLevel) {
@@ -427,16 +445,44 @@ export async function testLanguageSwitching(): Promise<void> {
   }
 
   console.log("\n=== Test Summary ===");
-  console.log(`Basic Switching: ${results.results.filter(r => r.testCase.category === "basic-switching").length} tests`);
-  console.log(`Dialect Handling: ${results.results.filter(r => r.testCase.category === "dialect-handling").length} tests`);
-  console.log(`Crisis Consistency: ${results.results.filter(r => r.testCase.category === "crisis-consistency").length} tests`);
-  console.log(`Cultural Context: ${results.results.filter(r => r.testCase.category === "cultural-context").length} tests`);
+  console.log(
+    `Basic Switching: ${
+      results.results.filter((r) => r.testCase.category === "basic-switching")
+        .length
+    } tests`
+  );
+  console.log(
+    `Dialect Handling: ${
+      results.results.filter((r) => r.testCase.category === "dialect-handling")
+        .length
+    } tests`
+  );
+  console.log(
+    `Crisis Consistency: ${
+      results.results.filter(
+        (r) => r.testCase.category === "crisis-consistency"
+      ).length
+    } tests`
+  );
+  console.log(
+    `Cultural Context: ${
+      results.results.filter((r) => r.testCase.category === "cultural-context")
+        .length
+    } tests`
+  );
 
   // Fail if success rate below 80%
   if (results.passed / results.totalTests < 0.8) {
-    throw new Error(`Test suite failed: only ${results.passed}/${results.totalTests} tests passed`);
+    throw new Error(
+      `Test suite failed: only ${results.passed}/${results.totalTests} tests passed`
+    );
   }
 }
 
 // Export test cases for external use
-export { LANGUAGE_TEST_CASES, detectLanguage, hasEgyptianDialect, hasLevantineDialect };
+export {
+  LANGUAGE_TEST_CASES,
+  detectLanguage,
+  hasEgyptianDialect,
+  hasLevantineDialect,
+};

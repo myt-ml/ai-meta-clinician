@@ -26,7 +26,13 @@
     "validatedBy": "clinical-supervisor",
     "validationDate": "2025-10-31",
     "notes": "Cultural stigma barrier - requires sensitive, culturally-informed response",
-    "tags": ["cultural-context", "stigma", "family-pressure", "egyptian", "depression"],
+    "tags": [
+      "cultural-context",
+      "stigma",
+      "family-pressure",
+      "egyptian",
+      "depression"
+    ],
     "culturalContext": "Mental health stigma prevalent in MENA region",
     "trainingNote": "Validate distress while providing psychoeducation about mental health as medical condition"
   }

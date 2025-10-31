@@ -1,32 +1,43 @@
 /**
  * Local Telemetry System
- * 
+ *
  * Tracks system performance, routing decisions, and operational metrics.
  * All data stored locally and encrypted - no external telemetry.
- * 
+ *
  * Metrics tracked:
  * - Stage latency (validation → risk → LLM → format)
  * - Routing decisions (mhGAP vs Ollama vs WebLLM vs fallback)
  * - Model selection (which model for which task)
  * - Error rates and types
  * - Safety check results
- * 
+ *
  * HIPAA Compliance:
  * - No PHI stored (metadata only)
  * - All logs encrypted at rest
  * - Local storage only (IndexedDB)
  * - Automatic cleanup after 90 days
- * 
+ *
  * @module telemetry/local
  */
 
-import { encryptJSONWithRotation, decryptJSONWithRotation, type EncryptedDataWithKeyId } from '../security/keyRotation';
+import {
+  encryptJSONWithRotation,
+  decryptJSONWithRotation,
+  type EncryptedDataWithKeyId,
+} from "../security/keyRotation";
 
 /**
  * Stage timing information
  */
 export interface StageMetrics {
-  stage: 'validation' | 'risk-assessment' | 'safety-check' | 'llm-routing' | 'mhgap-protocol' | 'response-format' | 'total';
+  stage:
+    | "validation"
+    | "risk-assessment"
+    | "safety-check"
+    | "llm-routing"
+    | "mhgap-protocol"
+    | "response-format"
+    | "total";
   startTime: number;
   endTime: number;
   duration: number; // milliseconds
@@ -39,8 +50,8 @@ export interface StageMetrics {
  */
 export interface RoutingDecision {
   timestamp: number;
-  trigger: 'crisis' | 'arabic' | 'general' | 'safety-validation';
-  routedTo: 'mhgap-offline' | 'ollama' | 'webllm' | 'fallback-offline';
+  trigger: "crisis" | "arabic" | "general" | "safety-validation";
+  routedTo: "mhgap-offline" | "ollama" | "webllm" | "fallback-offline";
   model?: string; // e.g., 'llama3.2:3b', 'qwen2.5:1.5b'
   fallbackReason?: string; // If fallback occurred
   success: boolean;
@@ -52,8 +63,8 @@ export interface RoutingDecision {
  */
 export interface SafetyCheckResult {
   timestamp: number;
-  method: 'columbia-protocol' | 'local-llm' | 'keyword-based';
-  riskLevel: 'none' | 'low' | 'medium' | 'high' | 'crisis';
+  method: "columbia-protocol" | "local-llm" | "keyword-based";
+  riskLevel: "none" | "low" | "medium" | "high" | "crisis";
   crisisDetected: boolean;
   confidence?: number;
   duration: number; // milliseconds
@@ -68,7 +79,7 @@ export interface SessionMetrics {
   stages: StageMetrics[];
   routing: RoutingDecision | null;
   safetyCheck: SafetyCheckResult | null;
-  language: 'en' | 'ar' | 'mixed' | 'unknown';
+  language: "en" | "ar" | "mixed" | "unknown";
   totalDuration: number; // milliseconds
   success: boolean;
   errorType?: string;
@@ -89,9 +100,9 @@ export interface TelemetryStats {
 }
 
 class LocalTelemetryManager {
-  private dbName = 'clinician-telemetry';
-  private sessionStore = 'sessions';
-  private statsStore = 'stats';
+  private dbName = "clinician-telemetry";
+  private sessionStore = "sessions";
+  private statsStore = "stats";
   private db: IDBDatabase | null = null;
   private initialized = false;
   private retentionDays = 90;
@@ -112,14 +123,16 @@ class LocalTelemetryManager {
 
         // Sessions store
         if (!db.objectStoreNames.contains(this.sessionStore)) {
-          const sessionStore = db.createObjectStore(this.sessionStore, { keyPath: 'sessionId' });
-          sessionStore.createIndex('timestamp', 'timestamp', { unique: false });
-          sessionStore.createIndex('success', 'success', { unique: false });
+          const sessionStore = db.createObjectStore(this.sessionStore, {
+            keyPath: "sessionId",
+          });
+          sessionStore.createIndex("timestamp", "timestamp", { unique: false });
+          sessionStore.createIndex("success", "success", { unique: false });
         }
 
         // Stats store
         if (!db.objectStoreNames.contains(this.statsStore)) {
-          db.createObjectStore(this.statsStore, { keyPath: 'id' });
+          db.createObjectStore(this.statsStore, { keyPath: "id" });
         }
       };
 
@@ -136,14 +149,17 @@ class LocalTelemetryManager {
    */
   async logSession(metrics: SessionMetrics): Promise<void> {
     await this.initialize();
-    if (!this.db) throw new Error('Database not initialized');
+    if (!this.db) throw new Error("Database not initialized");
 
     try {
       // Encrypt metrics before storage
       const encrypted = await encryptJSONWithRotation(metrics);
 
       return new Promise((resolve, reject) => {
-        const transaction = this.db!.transaction(this.sessionStore, 'readwrite');
+        const transaction = this.db!.transaction(
+          this.sessionStore,
+          "readwrite"
+        );
         const store = transaction.objectStore(this.sessionStore);
 
         const request = store.put({
@@ -161,7 +177,7 @@ class LocalTelemetryManager {
         request.onerror = () => reject(request.error);
       });
     } catch (error) {
-      console.error('[Telemetry] Failed to log session:', error);
+      console.error("[Telemetry] Failed to log session:", error);
     }
   }
 
@@ -176,26 +192,36 @@ class LocalTelemetryManager {
 
       stats.totalSessions++;
       if (metrics.success) {
-        stats.successRate = (stats.successRate * (stats.totalSessions - 1) + 1) / stats.totalSessions;
+        stats.successRate =
+          (stats.successRate * (stats.totalSessions - 1) + 1) /
+          stats.totalSessions;
       } else {
-        stats.successRate = (stats.successRate * (stats.totalSessions - 1)) / stats.totalSessions;
+        stats.successRate =
+          (stats.successRate * (stats.totalSessions - 1)) / stats.totalSessions;
         stats.errorRate = 1 - stats.successRate;
       }
 
-      stats.averageLatency = (stats.averageLatency * (stats.totalSessions - 1) + metrics.totalDuration) / stats.totalSessions;
+      stats.averageLatency =
+        (stats.averageLatency * (stats.totalSessions - 1) +
+          metrics.totalDuration) /
+        stats.totalSessions;
 
       if (metrics.routing) {
         const routeKey = metrics.routing.routedTo;
-        stats.routingBreakdown[routeKey] = (stats.routingBreakdown[routeKey] || 0) + 1;
+        stats.routingBreakdown[routeKey] =
+          (stats.routingBreakdown[routeKey] || 0) + 1;
 
         if (metrics.routing.model) {
-          stats.modelUsage[metrics.routing.model] = (stats.modelUsage[metrics.routing.model] || 0) + 1;
+          stats.modelUsage[metrics.routing.model] =
+            (stats.modelUsage[metrics.routing.model] || 0) + 1;
         }
       }
 
       if (metrics.safetyCheck?.crisisDetected) {
-        const currentDetections = stats.crisisDetectionRate * (stats.totalSessions - 1);
-        stats.crisisDetectionRate = (currentDetections + 1) / stats.totalSessions;
+        const currentDetections =
+          stats.crisisDetectionRate * (stats.totalSessions - 1);
+        stats.crisisDetectionRate =
+          (currentDetections + 1) / stats.totalSessions;
       }
 
       stats.lastUpdated = Date.now();
@@ -204,11 +230,11 @@ class LocalTelemetryManager {
       const encrypted = await encryptJSONWithRotation(stats);
 
       return new Promise((resolve, reject) => {
-        const transaction = this.db!.transaction(this.statsStore, 'readwrite');
+        const transaction = this.db!.transaction(this.statsStore, "readwrite");
         const store = transaction.objectStore(this.statsStore);
 
         const request = store.put({
-          id: 'global-stats',
+          id: "global-stats",
           encrypted,
         });
 
@@ -216,7 +242,7 @@ class LocalTelemetryManager {
         request.onerror = () => reject(request.error);
       });
     } catch (error) {
-      console.error('[Telemetry] Failed to update stats:', error);
+      console.error("[Telemetry] Failed to update stats:", error);
     }
   }
 
@@ -225,20 +251,22 @@ class LocalTelemetryManager {
    */
   async getStats(): Promise<TelemetryStats> {
     await this.initialize();
-    if (!this.db) throw new Error('Database not initialized');
+    if (!this.db) throw new Error("Database not initialized");
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(this.statsStore, 'readonly');
+      const transaction = this.db!.transaction(this.statsStore, "readonly");
       const store = transaction.objectStore(this.statsStore);
-      const request = store.get('global-stats');
+      const request = store.get("global-stats");
 
       request.onsuccess = async () => {
         if (request.result && request.result.encrypted) {
           try {
-            const stats = await decryptJSONWithRotation<TelemetryStats>(request.result.encrypted);
+            const stats = await decryptJSONWithRotation<TelemetryStats>(
+              request.result.encrypted
+            );
             resolve(stats);
           } catch (error) {
-            console.error('[Telemetry] Failed to decrypt stats:', error);
+            console.error("[Telemetry] Failed to decrypt stats:", error);
             resolve(this.getDefaultStats());
           }
         } else {
@@ -247,7 +275,7 @@ class LocalTelemetryManager {
       };
 
       request.onerror = () => {
-        console.error('[Telemetry] Failed to get stats:', request.error);
+        console.error("[Telemetry] Failed to get stats:", request.error);
         resolve(this.getDefaultStats());
       };
     });
@@ -261,10 +289,10 @@ class LocalTelemetryManager {
     if (!this.db) return [];
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(this.sessionStore, 'readonly');
+      const transaction = this.db!.transaction(this.sessionStore, "readonly");
       const store = transaction.objectStore(this.sessionStore);
-      const index = store.index('timestamp');
-      const request = index.openCursor(null, 'prev'); // Descending order
+      const index = store.index("timestamp");
+      const request = index.openCursor(null, "prev"); // Descending order
 
       const sessions: SessionMetrics[] = [];
       let count = 0;
@@ -274,12 +302,14 @@ class LocalTelemetryManager {
 
         if (cursor && count < limit) {
           try {
-            const decrypted = await decryptJSONWithRotation<SessionMetrics>(cursor.value.encrypted);
+            const decrypted = await decryptJSONWithRotation<SessionMetrics>(
+              cursor.value.encrypted
+            );
             sessions.push(decrypted);
             count++;
             cursor.continue();
           } catch (error) {
-            console.error('[Telemetry] Failed to decrypt session:', error);
+            console.error("[Telemetry] Failed to decrypt session:", error);
             cursor.continue();
           }
         } else {
@@ -298,13 +328,13 @@ class LocalTelemetryManager {
     await this.initialize();
     if (!this.db) return 0;
 
-    const cutoffTime = Date.now() - (this.retentionDays * 24 * 60 * 60 * 1000);
+    const cutoffTime = Date.now() - this.retentionDays * 24 * 60 * 60 * 1000;
     let deletedCount = 0;
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(this.sessionStore, 'readwrite');
+      const transaction = this.db!.transaction(this.sessionStore, "readwrite");
       const store = transaction.objectStore(this.sessionStore);
-      const index = store.index('timestamp');
+      const index = store.index("timestamp");
       const range = IDBKeyRange.upperBound(cutoffTime);
       const request = index.openCursor(range);
 
@@ -349,14 +379,15 @@ const telemetryManager = new LocalTelemetryManager();
  * Performance tracker for measuring stage latency
  */
 export class PerformanceTracker {
-  private stages: Map<string, { start: number; stage: StageMetrics['stage'] }> = new Map();
+  private stages: Map<string, { start: number; stage: StageMetrics["stage"] }> =
+    new Map();
   private completedStages: StageMetrics[] = [];
   private sessionStart: number = Date.now();
 
   /**
    * Start tracking a stage
    */
-  startStage(stage: StageMetrics['stage']): void {
+  startStage(stage: StageMetrics["stage"]): void {
     this.stages.set(stage, {
       start: performance.now(),
       stage,
@@ -366,7 +397,11 @@ export class PerformanceTracker {
   /**
    * End tracking a stage
    */
-  endStage(stage: StageMetrics['stage'], success: boolean, error?: string): void {
+  endStage(
+    stage: StageMetrics["stage"],
+    success: boolean,
+    error?: string
+  ): void {
     const stageData = this.stages.get(stage);
     if (!stageData) {
       console.warn(`[PerformanceTracker] Stage ${stage} was not started`);
@@ -406,7 +441,9 @@ export class PerformanceTracker {
 /**
  * Log session metrics
  */
-export async function logSessionMetrics(metrics: SessionMetrics): Promise<void> {
+export async function logSessionMetrics(
+  metrics: SessionMetrics
+): Promise<void> {
   await telemetryManager.logSession(metrics);
 }
 
@@ -420,7 +457,9 @@ export async function getTelemetryStats(): Promise<TelemetryStats> {
 /**
  * Get recent sessions
  */
-export async function getRecentSessions(limit?: number): Promise<SessionMetrics[]> {
+export async function getRecentSessions(
+  limit?: number
+): Promise<SessionMetrics[]> {
   return await telemetryManager.getRecentSessions(limit);
 }
 

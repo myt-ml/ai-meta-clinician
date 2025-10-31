@@ -29,24 +29,28 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## What This System Can Do
 
 ✅ **Mental Health Screening**
+
 - Ask questions about your mood, anxiety, and stress
 - Provide depression screening (PHQ-9) and anxiety screening (GAD-7)
 - Assess your current risk level
 - Identify patterns in your symptoms
 
 ✅ **Information and Support**
+
 - Provide psychoeducation about mental health conditions
 - Suggest coping strategies based on WHO guidelines
 - Offer self-care recommendations
 - Provide resources for further help
 
 ✅ **Crisis Detection**
+
 - Recognize when you may be in danger
 - Immediately provide emergency contact information
 - Connect you to crisis resources (988, 911)
 - Prioritize your safety above all else
 
 ✅ **Privacy Protection**
+
 - All data stays on your device (never sent to external servers)
 - Information is encrypted for security
 - No identification required to use basic features
@@ -57,18 +61,21 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## What This System CANNOT Do
 
 ❌ **Medical Functions**
+
 - **Cannot diagnose** mental health conditions
 - **Cannot prescribe** medications or change your current medications
 - **Cannot provide** emergency intervention
 - **Cannot replace** your doctor, therapist, or psychiatrist
 
 ❌ **Limitations**
+
 - **Not a crisis hotline** - For emergencies, call 988 or 911
 - **Not suitable** for severe psychiatric emergencies
 - **Not designed** for children under 13 years old
 - **Not perfect** - AI can make mistakes
 
 ❌ **Legal Limitations**
+
 - **Not a substitute** for professional clinical assessment
 - **Not admissible** as medical documentation
 - **Not supervised** in real-time (responses are computer-generated)
@@ -79,23 +86,27 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## How It Works
 
 ### 1. You Provide Information
+
 - Type or speak your concerns
 - Answer screening questions
 - Share what's troubling you
 
 ### 2. System Processes Your Input
+
 - Checks for crisis keywords
 - Assesses your risk level
 - Reviews WHO clinical guidelines
 - May use AI to generate personalized response
 
 ### 3. You Receive Recommendations
+
 - Evidence-based guidance
 - Self-care suggestions
 - Resources for professional help
 - Emergency contacts if needed
 
 ### 4. Data is Stored Locally
+
 - Encrypted on your device
 - Automatically deleted after 90 days
 - Never sent to external servers
@@ -105,6 +116,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## Your Data and Privacy
 
 ### What Data is Collected
+
 - Your messages and questions (text only, no recordings)
 - Screening questionnaire responses (PHQ-9, GAD-7)
 - Risk assessment results
@@ -112,12 +124,14 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 - System performance data (to improve the tool)
 
 ### What is NOT Collected
+
 - Your name, address, or contact information (unless you provide it)
 - Photos, videos, or audio recordings
 - Your location or IP address
 - Information about other websites you visit
 
 ### How Your Data is Protected
+
 - **Encrypted at rest:** All data uses military-grade AES-256 encryption
 - **Local storage only:** Data never leaves your device
 - **Automatic deletion:** All data deleted after 90 days
@@ -125,6 +139,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 - **No tracking:** No cookies, no analytics, no external connections
 
 ### Your Privacy Rights
+
 - **Access:** You can view all your stored data
 - **Delete:** You can delete your data at any time
 - **Export:** You can download your data (encrypted)
@@ -135,6 +150,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## Risks and Benefits
 
 ### Potential Benefits
+
 - Convenient access to mental health screening
 - Private and confidential support
 - Evidence-based recommendations
@@ -143,6 +159,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 - Multi-language support
 
 ### Potential Risks
+
 - **AI errors:** System may misunderstand your concerns
 - **False sense of security:** May delay seeking professional help
 - **Technical issues:** System may malfunction or be unavailable
@@ -150,6 +167,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 - **Not comprehensive:** Cannot address all mental health needs
 
 ### Risk Mitigation
+
 - System always prioritizes safety (crisis detection)
 - Clear disclaimers that this is not professional care
 - Emergency resources provided prominently
@@ -163,12 +181,14 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ### When to Seek Immediate Help
 
 **Call 988 (Suicide & Crisis Lifeline) or 911 if you:**
+
 - Have thoughts of harming yourself or others
 - Have a plan to hurt yourself
 - Feel you cannot keep yourself safe
 - Are experiencing a mental health emergency
 
 **Go to the nearest emergency department if:**
+
 - You are in immediate danger
 - You have harmed yourself
 - You are experiencing severe symptoms (hallucinations, delusions)
@@ -181,6 +201,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 ## Your Rights as a User
 
 ### You Have the Right To:
+
 1. **Refuse use** - You can choose not to use this system at any time
 2. **Ask questions** - Request clarification about how the system works
 3. **Stop anytime** - End your session without explanation
@@ -191,6 +212,7 @@ The AI Meta Clinician is a computerized mental health screening and support tool
 8. **Human review** - Request that a clinician review system outputs (in supervised settings)
 
 ### You Are Responsible For:
+
 1. **Providing accurate information** - Be honest about your symptoms
 2. **Seeking professional help** - Use this as a supplement, not replacement
 3. **Emergency response** - Contact emergency services when needed
@@ -216,6 +238,7 @@ In healthcare settings, this system is used under clinical supervision:
 ## Duration of Consent
 
 This consent remains in effect until:
+
 - You withdraw consent (can do anytime)
 - You delete your account/data
 - The system is decommissioned
@@ -226,15 +249,19 @@ This consent remains in effect until:
 ## Questions and Concerns
 
 ### For Technical Issues:
+
 [System Administrator Contact - to be filled by deploying organization]
 
 ### For Clinical Concerns:
+
 [Clinical Supervisor Contact - to be filled by deploying organization]
 
 ### For Privacy Questions:
+
 [Privacy Officer Contact - to be filled by deploying organization]
 
 ### For Emergencies:
+
 - **USA:** 988 (Suicide & Crisis Lifeline) or 911
 - **International:** Contact your local emergency services
 
@@ -261,11 +288,13 @@ This consent remains in effect until:
 ## Withdrawal of Consent
 
 You may withdraw consent at any time by:
+
 1. Clicking "Delete My Data" in settings
 2. Contacting the system administrator
 3. Simply stopping use of the system
 
 Withdrawal of consent will result in:
+
 - Immediate deletion of all your stored data
 - Inability to access previous conversations
 - No penalty or impact on your healthcare
@@ -275,6 +304,7 @@ Withdrawal of consent will result in:
 ## Updates to This Consent
 
 This consent form may be updated to reflect:
+
 - Changes in system capabilities
 - New privacy regulations
 - Improvements in safety protocols
@@ -291,9 +321,9 @@ You will be notified of significant changes and asked to re-consent.
 
 **I have read, understood, and agree to the terms outlined in this informed consent form.**
 
-- **Date:** _______________
-- **User Signature (if applicable):** _______________
-- **Witness (if in clinical setting):** _______________
+- **Date:** ******\_\_\_******
+- **User Signature (if applicable):** ******\_\_\_******
+- **Witness (if in clinical setting):** ******\_\_\_******
 
 ---
 

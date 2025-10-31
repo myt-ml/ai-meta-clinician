@@ -1,24 +1,24 @@
 /**
  * Encryption Key Rotation Manager
- * 
+ *
  * Manages automatic key rotation for encrypted storage.
  * Ensures old data can still be decrypted while new data uses fresh keys.
- * 
+ *
  * Features:
  * - Automatic 90-day key rotation
  * - Multi-key storage (old keys kept for decryption)
  * - Key metadata tracking
  * - Rotation scheduling
  * - Emergency rotation support
- * 
+ *
  * @module security/keyRotation
  */
 
-import { EncryptionUtils, type EncryptedData } from './encryption';
-import type { CryptoKey } from 'crypto';
+import { EncryptionUtils, type EncryptedData } from "./encryption";
+import type { CryptoKey } from "crypto";
 
 const KEY_ROTATION_DAYS = 90;
-const KEY_STORE_NAME = 'clinician-key-store';
+const KEY_STORE_NAME = "clinician-key-store";
 
 export interface KeyMetadata {
   id: string;
@@ -45,8 +45,8 @@ class KeyRotationManager {
   private metadata: Map<string, KeyMetadata> = new Map();
   private activeKeyId: string | null = null;
   private initialized = false;
-  private dbName = 'encryption-keys';
-  private storeName = 'keys';
+  private dbName = "encryption-keys";
+  private storeName = "keys";
 
   /**
    * Initialize the key rotation manager
@@ -67,8 +67,8 @@ class KeyRotationManager {
 
       this.initialized = true;
     } catch (error) {
-      console.error('Failed to initialize key rotation manager:', error);
-      throw new Error('Key rotation manager initialization failed');
+      console.error("Failed to initialize key rotation manager:", error);
+      throw new Error("Key rotation manager initialization failed");
     }
   }
 
@@ -84,7 +84,7 @@ class KeyRotationManager {
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName, { keyPath: 'id' });
+          db.createObjectStore(this.storeName, { keyPath: "id" });
         }
       };
 
@@ -92,7 +92,7 @@ class KeyRotationManager {
         const db = request.result;
 
         try {
-          const transaction = db.transaction(this.storeName, 'readonly');
+          const transaction = db.transaction(this.storeName, "readonly");
           const store = transaction.objectStore(this.storeName);
           const getAllRequest = store.getAll();
 
@@ -147,7 +147,7 @@ class KeyRotationManager {
 
         try {
           const jwk = await EncryptionUtils.exportKey(key);
-          const transaction = db.transaction(this.storeName, 'readwrite');
+          const transaction = db.transaction(this.storeName, "readwrite");
           const store = transaction.objectStore(this.storeName);
 
           const putRequest = store.put({
@@ -205,7 +205,9 @@ class KeyRotationManager {
 
     await this.saveKeyToIndexedDB(keyId, key, metadata);
 
-    console.log(`[KeyRotation] Created new key: ${keyId} (version ${currentVersion})`);
+    console.log(
+      `[KeyRotation] Created new key: ${keyId} (version ${currentVersion})`
+    );
 
     return keyId;
   }
@@ -215,14 +217,14 @@ class KeyRotationManager {
    */
   getActiveKey(): { keyId: string; key: CryptoKey; version: number } {
     if (!this.activeKeyId) {
-      throw new Error('No active encryption key');
+      throw new Error("No active encryption key");
     }
 
     const key = this.keys.get(this.activeKeyId);
     const metadata = this.metadata.get(this.activeKeyId);
 
     if (!key || !metadata) {
-      throw new Error('Active key not found');
+      throw new Error("Active key not found");
     }
 
     return {
@@ -249,7 +251,7 @@ class KeyRotationManager {
     if (!metadata) return false;
 
     if (Date.now() >= metadata.rotateAfter) {
-      console.log('[KeyRotation] Automatic rotation triggered');
+      console.log("[KeyRotation] Automatic rotation triggered");
       await this.createNewKey();
       return true;
     }
@@ -260,7 +262,7 @@ class KeyRotationManager {
   /**
    * Force immediate key rotation
    */
-  async rotateNow(reason: string = 'Manual rotation'): Promise<void> {
+  async rotateNow(reason: string = "Manual rotation"): Promise<void> {
     console.log(`[KeyRotation] Force rotation: ${reason}`);
     await this.createNewKey();
   }

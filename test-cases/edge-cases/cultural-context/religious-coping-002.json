@@ -26,7 +26,13 @@
     "validatedBy": "clinical-supervisor",
     "validationDate": "2025-10-31",
     "notes": "Religious coping not mutually exclusive with clinical care - integrate both",
-    "tags": ["cultural-context", "religious-coping", "family-pressure", "egyptian", "depression"],
+    "tags": [
+      "cultural-context",
+      "religious-coping",
+      "family-pressure",
+      "egyptian",
+      "depression"
+    ],
     "culturalContext": "Islamic context - religion important but not barrier to treatment",
     "trainingNote": "Validate religious practices AND clinical care - both/and not either/or"
   }
