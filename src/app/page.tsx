@@ -301,6 +301,8 @@ export default function HomePage() {
                   ? "bg-orange-50 border-orange-600 text-orange-900"
                   : "bg-yellow-50 border-yellow-600 text-yellow-900"
               }`}
+              role="alert"
+              aria-live="assertive"
             >
               <div className="flex items-start gap-3">
                 <svg
@@ -311,6 +313,7 @@ export default function HomePage() {
                   height="20"
                   fill="currentColor"
                   viewBox="0 0 20 20"
+                  aria-hidden="true"
                 >
                   <path
                     fillRule="evenodd"
@@ -383,6 +386,7 @@ export default function HomePage() {
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"

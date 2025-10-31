@@ -116,12 +116,17 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div
+        className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="phq9-title"
+      >
         {/* Header */}
         <div className="bg-[var(--color-primary)] text-white p-6 rounded-t-3xl">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h2 className="text-xl font-bold">{title}</h2>
+              <h2 id="phq9-title" className="text-xl font-bold">{title}</h2>
               <p className="text-sm opacity-90 mt-1">{subtitle}</p>
             </div>
             <button
@@ -131,6 +136,7 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
                 setResponses(Array(9).fill(-1));
               }}
               className="text-white hover:text-blue-200 flex-shrink-0"
+              aria-label="Close screening"
             >
               <svg
                 className="w-5 h-5 flex-shrink-0"
@@ -139,6 +145,7 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -182,6 +189,7 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
                     ? "border-[var(--color-primary)] bg-subtle text-primary font-semibold"
                     : "border-subtle hover:bg-subtle text-gray-700"
                 }`}
+                aria-pressed={responses[currentQuestion] === index}
               >
                 <div className="flex items-center justify-between">
                   <span>{option}</span>

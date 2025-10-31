@@ -39,17 +39,24 @@ export default function LanguageToggle({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls="language-menu"
+        aria-label="Change language"
       >
         <span className="text-lg">{currentLang.flag}</span>
         <span>{currentLang.label}</span>
         <svg
-          className={`w-4 h-4 transition-transform ${
+          className={`w-5 h-5 flex-shrink-0 transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
+          width="20"
+          height="20"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -69,7 +76,12 @@ export default function LanguageToggle({
           />
 
           {/* Dropdown */}
-          <div className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div
+            id="language-menu"
+            className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            role="listbox"
+            aria-label="Select language"
+          >
             <div className="py-1">
               {languages.map((lang) => (
                 <button
@@ -80,14 +92,19 @@ export default function LanguageToggle({
                       ? "bg-blue-50 text-blue-700 font-semibold"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
+                  role="option"
+                  aria-selected={current === lang.code}
                 >
                   <span className="text-lg">{lang.flag}</span>
                   <span>{lang.label}</span>
                   {current === lang.code && (
                     <svg
-                      className="ml-auto w-4 h-4 text-blue-600"
+                      className="ml-auto w-4 h-4 flex-shrink-0 text-blue-600"
+                      width="16"
+                      height="16"
                       fill="currentColor"
                       viewBox="0 0 20 20"
+                      aria-hidden="true"
                     >
                       <path
                         fillRule="evenodd"
