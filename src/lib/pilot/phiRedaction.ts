@@ -55,10 +55,14 @@ const PHI_PATTERNS = {
   // Contact information
   email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
   phone: /\b(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g,
+  phoneShort: /\b\d{3}[-.\s]?\d{4}\b/g, // 7-digit local numbers
 
   // Identifiers
   ssn: /\b\d{3}-\d{2}-\d{4}\b/g,
-  zipCode: /\b\d{5}(-\d{4})?\b/g,
+  // ZIP codes - match 5-digit codes in address context or after state abbreviations
+  // Matches: "in 12345", "ZIP 12345", "MA 12345", "12345-6789", but NOT "ID is 98765"
+  zipCode:
+    /(?:(?:live|lived|lives|living|in|at|from|ZIP|zip|address|postal)\s+)?(\d{5}-\d{4})\b|(?:(?:live|lived|lives|living|in|at|from|ZIP|zip|[A-Z]{2})\s+)(\d{5})\b/g,
 
   // Dates
   dateSlash: /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g,
@@ -136,8 +140,13 @@ export function redactContactInfo(
     return preserveContext ? "[EMAIL]" : "[REDACTED]";
   });
 
-  // Redact phone numbers
+  // Redact phone numbers (full format first)
   redacted = redacted.replace(PHI_PATTERNS.phone, () => {
+    return preserveContext ? "[PHONE]" : "[REDACTED]";
+  });
+
+  // Redact short phone numbers (7-digit)
+  redacted = redacted.replace(PHI_PATTERNS.phoneShort, () => {
     return preserveContext ? "[PHONE]" : "[REDACTED]";
   });
 
@@ -255,14 +264,40 @@ export function redactMessage(
     }
   };
 
-  // Apply redactions in order
+  // Apply redactions in order (locations before names to avoid splitting addresses)
+  const beforeLocations = redacted;
+  redacted = redactLocations(redacted, config.preserveContext);
+  countRedactions(beforeLocations, redacted, "location");
+
   const beforeNames = redacted;
   redacted = redactNames(redacted, config.preserveContext);
   countRedactions(beforeNames, redacted, "name");
 
   const beforeContact = redacted;
   redacted = redactContactInfo(redacted, config.preserveContext);
-  countRedactions(beforeContact, redacted, "contact");
+  // Count emails and phones separately (both are contact info)
+  const emailPattern = config.preserveContext
+    ? "\\[EMAIL\\]"
+    : "\\[REDACTED\\]";
+  const phonePattern = config.preserveContext
+    ? "\\[PHONE\\]"
+    : "\\[REDACTED\\]";
+  const emailCount = (beforeContact.match(new RegExp(emailPattern, "g")) || [])
+    .length;
+  const phoneCountBefore = (
+    beforeContact.match(new RegExp(phonePattern, "g")) || []
+  ).length;
+  const emailCountAfter = (redacted.match(new RegExp(emailPattern, "g")) || [])
+    .length;
+  const phoneCountAfter = (redacted.match(new RegExp(phonePattern, "g")) || [])
+    .length;
+
+  for (let i = 0; i < emailCountAfter - emailCount; i++) {
+    redactedEntities.push({ type: "contact", placeholder: "[EMAIL]" });
+  }
+  for (let i = 0; i < phoneCountAfter - phoneCountBefore; i++) {
+    redactedEntities.push({ type: "contact", placeholder: "[PHONE]" });
+  }
 
   const beforeIds = redacted;
   redacted = redactIdentifiers(redacted, config.preserveContext);
@@ -275,10 +310,6 @@ export function redactMessage(
   const beforeAges = redacted;
   redacted = redactAges(redacted, config.preserveContext);
   countRedactions(beforeAges, redacted, "age");
-
-  const beforeLocations = redacted;
-  redacted = redactLocations(redacted, config.preserveContext);
-  countRedactions(beforeLocations, redacted, "location");
 
   // For aggressive mode, also redact numbers and specific details
   if (

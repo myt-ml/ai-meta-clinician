@@ -69,6 +69,7 @@ function assessMessage(
     "suicide",
     "end my life",
     "not worth living",
+    "want to kill myself",
   ];
   const crisisKeywords = [
     "tonight",
@@ -79,31 +80,64 @@ function assessMessage(
   ];
   const methodKeywords = ["pills", "gun", "knife", "jump", "rope", "overdose"];
 
+  // Self-harm keywords
+  const selfHarmKeywords = [
+    "hurt myself",
+    "cutting",
+    "self-harm",
+    "cut myself",
+    "hurting myself",
+  ];
+
+  // Depression/anxiety keywords
+  const depressionKeywords = ["depressed", "depression", "severe depression"];
+  const anxietyKeywords = ["anxious", "anxiety", "panic"];
+
   const hasSuicideIntent = suicideKeywords.some((kw) => lowerText.includes(kw));
   const hasImmediacy = crisisKeywords.some((kw) => lowerText.includes(kw));
   const hasMethod = methodKeywords.some((kw) => lowerText.includes(kw));
+  const hasSelfHarm = selfHarmKeywords.some((kw) => lowerText.includes(kw));
+  const hasDepression = depressionKeywords.some((kw) => lowerText.includes(kw));
+  const hasAnxiety = anxietyKeywords.some((kw) => lowerText.includes(kw));
+
+  // Detect implicit suicidal intent through context
+  // "I want to overdose", "I want to jump", "I have a gun and want to use it"
+  // "I have to do it now", "I need to end this"
+  const hasImplicitIntent =
+    (hasMethod &&
+      (lowerText.includes("i want to") ||
+        lowerText.includes("i'm going to") ||
+        lowerText.includes("i will") ||
+        lowerText.includes("going to"))) ||
+    (hasImmediacy &&
+      (lowerText.includes("have to do it") ||
+        lowerText.includes("need to end") ||
+        lowerText.includes("end this")));
+
+  const hasAnySuicidalIntent = hasSuicideIntent || hasImplicitIntent;
 
   // Columbia Protocol scoring
   let columbiaScore = 0;
-  if (hasSuicideIntent) columbiaScore += 2;
+  if (hasAnySuicidalIntent) columbiaScore += 2;
   if (hasMethod) columbiaScore += 2;
   if (hasImmediacy) columbiaScore += 2;
 
-  if (columbiaScore >= 5) {
+  // Critical: Any suicidal intent is critical (real-world Columbia Protocol)
+  if (hasAnySuicidalIntent) {
+    const triggers = ["suicidal_intent"];
+    if (hasMethod) triggers.push("method");
+    if (hasImmediacy) triggers.push("immediacy");
+
     return {
       riskLevel: "critical",
       confidence: 0.95,
-      triggers: ["suicidal_intent", "method", "immediacy"],
-      columbiaScore: 6,
+      triggers,
+      columbiaScore: columbiaScore,
     };
   }
 
-  // Self-harm detection
-  if (
-    lowerText.includes("hurt myself") ||
-    lowerText.includes("cutting") ||
-    lowerText.includes("self-harm")
-  ) {
+  // High: Self-harm without suicidal intent
+  if (hasSelfHarm && !hasSuicideIntent) {
     return {
       riskLevel: "high",
       confidence: 0.85,
@@ -112,21 +146,19 @@ function assessMessage(
     };
   }
 
-  // Depression/anxiety
-  if (
-    lowerText.includes("depressed") ||
-    lowerText.includes("anxious") ||
-    lowerText.includes("panic")
-  ) {
+  // Moderate: Depression/anxiety
+  if (hasDepression || hasAnxiety) {
     return {
       riskLevel: "moderate",
       confidence: 0.75,
+      columbiaScore: 1,
     };
   }
 
   return {
     riskLevel: "low",
     confidence: 0.7,
+    columbiaScore: 0,
   };
 }
 

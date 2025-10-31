@@ -828,14 +828,17 @@ describe("Crash and Recovery Tests", () => {
     );
 
     it("should track failure rate", () => {
+      // Deterministic test: 6 failures out of 10 attempts = 60% failure rate
       const totalAttempts = 10;
       let failures = 0;
 
       for (let i = 0; i < totalAttempts; i++) {
-        if (Math.random() > 0.8) {
+        if (i < 6) {
+          // First 6 attempts fail
           healthMonitor.recordFailure("ollama");
           failures++;
         } else {
+          // Last 4 succeed
           healthMonitor.recordSuccess("ollama", 100);
         }
       }
@@ -843,10 +846,9 @@ describe("Crash and Recovery Tests", () => {
       const failureRate = failures / totalAttempts;
       const health = healthMonitor.checkModelHealth("ollama");
 
-      // If failure rate high, should be unhealthy
-      if (failureRate > 0.3) {
-        expect(health.errorCount).toBeGreaterThan(0);
-      }
+      // High failure rate (60%) should result in errors being tracked
+      expect(failureRate).toBe(0.6);
+      expect(health.errorCount).toBeGreaterThan(0);
     });
 
     it("should provide recovery recommendations", () => {
