@@ -16,6 +16,7 @@ This Safety Policy defines the crisis management protocols, escalation procedure
 ## Core Safety Principles
 
 ### 1. Crisis-First Architecture
+
 **The system ALWAYS prioritizes crisis detection over all other functions.**
 
 - Crisis detection runs before any AI inference
@@ -24,14 +25,16 @@ This Safety Policy defines the crisis management protocols, escalation procedure
 - Emergency contact information always provided
 
 ### 2. Fail-Safe Design
+
 **If anything fails, the system defaults to safe, offline protocols.**
 
 - Network failure → Offline mhGAP protocols
-- LLM unavailable → Offline mhGAP protocols  
+- LLM unavailable → Offline mhGAP protocols
 - Uncertain classification → Escalate to human
 - Missing data → Assume higher risk level
 
 ### 3. Never Standalone
+
 **This system is NOT a replacement for clinical judgment.**
 
 - Must be supervised by licensed clinician
@@ -46,12 +49,14 @@ This Safety Policy defines the crisis management protocols, escalation procedure
 ### Level 1: IMMINENT DANGER (Crisis)
 
 **Triggers:**
+
 - Active suicidal intent with plan/method
 - Stated intent to harm self or others immediately
 - Acute psychotic state with safety concerns
 - Keywords: "kill myself tonight", "I have pills", "going to jump"
 
 **System Response:**
+
 1. **IMMEDIATE:** Display emergency banner
 2. **IMMEDIATE:** Provide 988 (suicide lifeline) and 911
 3. **IMMEDIATE:** Generate offline crisis protocol
@@ -60,6 +65,7 @@ This Safety Policy defines the crisis management protocols, escalation procedure
 6. **ALERT:** Flag for clinical supervisor review
 
 **Response Template:**
+
 ```
 🚨 EMERGENCY: This is a mental health crisis.
 
@@ -71,11 +77,12 @@ IMMEDIATE ACTIONS:
 
 You are not alone. Help is available RIGHT NOW.
 
-DO NOT use this system for emergency situations. 
+DO NOT use this system for emergency situations.
 Contact emergency services immediately.
 ```
 
 **Arabic Template:**
+
 ```
 🚨 حالة طوارئ: هذه أزمة صحة نفسية
 
@@ -92,12 +99,14 @@ Contact emergency services immediately.
 ### Level 2: HIGH RISK
 
 **Triggers:**
+
 - Passive suicidal ideation (wish to die)
-- Recent self-harm behavior  
+- Recent self-harm behavior
 - Escalating violent thoughts
 - Severe depression with hopelessness
 
 **System Response:**
+
 1. Display urgent care recommendation
 2. Provide crisis resources prominently
 3. Use offline mhGAP protocols (preferred)
@@ -106,6 +115,7 @@ Contact emergency services immediately.
 6. Recommend same-day clinical contact
 
 **Response Template:**
+
 ```
 ⚠️ URGENT: Your responses indicate significant risk.
 
@@ -124,12 +134,14 @@ Please contact a professional immediately.
 ### Level 3: MODERATE RISK
 
 **Triggers:**
+
 - Moderate depression/anxiety scores
 - Vague harm ideation without plan
 - Significant distress but stable
 - Requesting help with coping
 
 **System Response:**
+
 1. Provide mhGAP-based recommendations
 2. LLM inference allowed with guardrails
 3. Crisis resources listed (not emergency)
@@ -141,12 +153,14 @@ Please contact a professional immediately.
 ### Level 4: LOW RISK
 
 **Triggers:**
+
 - Mild symptoms
 - General wellness questions
 - Psychoeducation requests
 - No harm indicators
 
 **System Response:**
+
 1. Full system capabilities available
 2. LLM inference with tone enforcement
 3. Educational content provided
@@ -158,6 +172,7 @@ Please contact a professional immediately.
 ## Escalation Pathways
 
 ### User-Initiated Escalation
+
 Users can ALWAYS request immediate escalation:
 
 - "I need to talk to someone now" → Route to crisis resources
@@ -167,6 +182,7 @@ Users can ALWAYS request immediate escalation:
 ### System-Initiated Escalation
 
 **Automatic Escalation Triggers:**
+
 1. Risk level increase during session
 2. Repeated crisis keywords
 3. User expresses intent to harm
@@ -174,6 +190,7 @@ Users can ALWAYS request immediate escalation:
 5. LLM generates concerning content
 
 **Escalation Actions:**
+
 - Elevate to next risk tier
 - Apply stricter safety protocols
 - Log for clinical review
@@ -182,16 +199,19 @@ Users can ALWAYS request immediate escalation:
 ### Clinical Supervisor Notification
 
 **Immediate Notification (within 1 hour):**
+
 - Level 1 crisis detected
 - User requested emergency help
 - System malfunction during crisis assessment
 
 **Daily Notification:**
+
 - Summary of all Level 2 encounters
 - Failed safety checks
 - LLM tone violations
 
 **Weekly Notification:**
+
 - Aggregate statistics
 - Trend analysis
 - System performance metrics
@@ -203,6 +223,7 @@ Users can ALWAYS request immediate escalation:
 ### Content Filtering
 
 **Prohibited LLM Outputs:**
+
 - Medical advice (medication recommendations)
 - Diagnostic statements ("You have depression")
 - Minimizing language ("It's not that bad")
@@ -211,6 +232,7 @@ Users can ALWAYS request immediate escalation:
 - Casual/unprofessional tone
 
 **Post-Processing Enforcement:**
+
 - All LLM outputs run through tone validator
 - Casual phrases automatically corrected
 - Clinical disclaimers added
@@ -219,12 +241,14 @@ Users can ALWAYS request immediate escalation:
 ### Input Validation
 
 **Rejected Inputs:**
+
 - Requests for medication changes
 - Diagnostic requests
 - Third-party assessments (user must consent)
 - Inappropriate content (harassment, spam)
 
 **Sanitization:**
+
 - PII detection and flagging
 - SQL injection prevention
 - XSS attack mitigation
@@ -276,24 +300,28 @@ Users can ALWAYS request immediate escalation:
 ### Severity Levels
 
 **Critical (P0):**
+
 - Missed crisis detection (false negative)
 - System failure during active crisis
 - Data breach or encryption failure
 - LLM generated harmful advice
 
 **High (P1):**
+
 - False positive crisis (unnecessary alarm)
 - LLM tone violation in high-risk case
 - Escalation pathway failure
 - Extended downtime (>4 hours)
 
 **Medium (P2):**
+
 - LLM tone violations (routine)
 - Performance degradation
 - Non-crisis system errors
 - User complaints
 
 **Low (P3):**
+
 - Minor UI issues
 - Documentation errors
 - Non-urgent feature requests
@@ -301,12 +329,14 @@ Users can ALWAYS request immediate escalation:
 ### Incident Reporting
 
 **Who Reports:**
+
 - Users (via feedback mechanism)
 - Clinical supervisors (from audits)
 - System (automated error detection)
 - Technical team (monitoring alerts)
 
 **What to Report:**
+
 1. Date/time of incident
 2. Severity level
 3. Description of issue
@@ -315,6 +345,7 @@ Users can ALWAYS request immediate escalation:
 6. Steps taken to resolve
 
 **Where to Report:**
+
 - Critical/High: Immediate notification to clinical supervisor + technical lead
 - Medium/Low: Daily incident log review
 
@@ -333,6 +364,7 @@ Users can ALWAYS request immediate escalation:
 ### Clinical Supervisors
 
 **Initial Training (8 hours):**
+
 - System architecture and capabilities
 - Crisis detection protocols
 - Escalation procedures
@@ -341,6 +373,7 @@ Users can ALWAYS request immediate escalation:
 - Cultural competency (Arabic support)
 
 **Ongoing Training:**
+
 - Quarterly: System updates and new features
 - Monthly: Case review and quality improvement
 - As needed: Incident debriefs
@@ -348,6 +381,7 @@ Users can ALWAYS request immediate escalation:
 ### Technical Staff
 
 **Initial Training (4 hours):**
+
 - Safety-first development principles
 - Crisis detection architecture
 - Encryption and security
@@ -355,6 +389,7 @@ Users can ALWAYS request immediate escalation:
 - Incident response procedures
 
 **Ongoing Training:**
+
 - Quarterly: Security updates
 - Monthly: Performance review
 - As needed: Technical incident analysis
@@ -366,12 +401,14 @@ Users can ALWAYS request immediate escalation:
 ### Crisis Resources (Always Provide to Users)
 
 **United States:**
+
 - 988: Suicide & Crisis Lifeline
 - 911: Emergency services
 - 1-800-273-8255: National Suicide Prevention Lifeline (legacy)
 - Crisis Text Line: Text "HELLO" to 741741
 
 **International:**
+
 - System should detect locale and provide local resources
 - Maintain updated list of international crisis lines
 
@@ -425,6 +462,7 @@ Users can ALWAYS request immediate escalation:
 ### Version History
 
 **v1.0.0 (October 2025):**
+
 - Initial safety policy
 - Crisis detection protocols defined
 - Escalation pathways established
@@ -435,6 +473,7 @@ Users can ALWAYS request immediate escalation:
 ## Acknowledgments
 
 This safety policy is informed by:
+
 - WHO mhGAP guidelines
 - Columbia Suicide Severity Rating Scale (C-SSRS)
 - Joint Commission safety standards
