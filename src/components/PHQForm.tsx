@@ -115,19 +115,21 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div
-        className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-surface border border-border rounded-lg shadow-card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="phq9-title"
       >
         {/* Header */}
-        <div className="bg-[var(--color-primary)] text-white p-6 rounded-t-3xl">
+        <div className="bg-primary text-white p-6 border-b border-primary-dark">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h2 id="phq9-title" className="text-xl font-bold">{title}</h2>
-              <p className="text-sm opacity-90 mt-1">{subtitle}</p>
+              <h2 id="phq9-title" className="text-h2 font-semibold">
+                {title}
+              </h2>
+              <p className="text-caption opacity-90 mt-1">{subtitle}</p>
             </div>
             <button
               onClick={() => {
@@ -179,21 +181,21 @@ export default function PHQForm({ onSubmit, language }: PHQFormProps) {
           </p>
 
           {/* Options */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {opts.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleResponse(index)}
-                className={`w-full p-4 text-left rounded-2xl border-2 transition-all duration-200 shadow-sm ${
+                className={`w-full p-3 text-left rounded-md border transition-all duration-[var(--motion-duration)] ${
                   responses[currentQuestion] === index
-                    ? "border-[var(--color-primary)] bg-subtle text-primary font-semibold"
-                    : "border-subtle hover:bg-subtle text-gray-700"
+                    ? "border-primary bg-primary/5 text-textMain font-medium"
+                    : "border-border hover:bg-surfaceAlt text-textMain"
                 }`}
                 aria-pressed={responses[currentQuestion] === index}
               >
                 <div className="flex items-center justify-between">
-                  <span>{option}</span>
-                  <span className="text-sm text-gray-500">({index})</span>
+                  <span className="text-body">{option}</span>
+                  <span className="text-caption text-textMuted">({index})</span>
                 </div>
               </button>
             ))}

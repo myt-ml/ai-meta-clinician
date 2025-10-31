@@ -58,13 +58,13 @@ export default function SessionHistory({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-surface border border-border rounded-lg shadow-card max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
+        <div className="bg-primary text-white p-6 flex justify-between items-center border-b border-primary-dark">
           <div>
-            <h2 className="text-2xl font-bold">Session History</h2>
-            <p className="text-sm text-blue-100 mt-1">
+            <h2 className="text-h2 font-semibold">Session History</h2>
+            <p className="text-caption opacity-90 mt-1">
               {sessions.length} saved sessions
             </p>
           </div>
@@ -73,7 +73,9 @@ export default function SessionHistory({
             className="text-white hover:text-blue-200 transition-colors"
           >
             <svg
-              className="w-8 h-8"
+              className="w-8 h-8 flex-shrink-0"
+              width="32"
+              height="32"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -95,7 +97,9 @@ export default function SessionHistory({
             {sessions.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
                 <svg
-                  className="w-16 h-16 mx-auto mb-4 text-gray-300"
+                  className="w-16 h-16 mx-auto mb-4 text-gray-300 flex-shrink-0"
+                  width="64"
+                  height="64"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -201,29 +205,30 @@ export default function SessionHistory({
                       }`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        className={`max-w-[80%] rounded-md px-3 py-2 border ${
                           message.role === "user"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-surfaceAlt border-border text-textMain"
                             : message.role === "system"
-                            ? "bg-yellow-100 text-yellow-900 border border-yellow-300"
-                            : "bg-white text-gray-800 shadow-md border border-gray-200"
+                            ? "bg-yellow-50 text-textMain border-warning"
+                            : "bg-surface text-textMain border-border"
                         }`}
                       >
                         {message.riskLevel && message.riskLevel !== "low" && (
-                          <div className="text-xs font-semibold mb-2 flex items-center gap-2">
+                          <div className="text-caption font-medium mb-2 flex items-center gap-2">
                             <span
                               className={`inline-block w-2 h-2 rounded-full ${
                                 message.riskLevel === "critical"
-                                  ? "bg-red-600 animate-pulse"
+                                  ? "bg-danger animate-pulseSlow"
                                   : message.riskLevel === "high"
-                                  ? "bg-orange-500"
+                                  ? "bg-warning"
                                   : "bg-yellow-500"
                               }`}
+                              aria-hidden="true"
                             />
                             {message.riskLevel.toUpperCase()}
                           </div>
                         )}
-                        <p className="text-sm whitespace-pre-wrap">
+                        <p className="text-body whitespace-pre-wrap">
                           {message.text}
                         </p>
                         <p
@@ -271,7 +276,9 @@ export default function SessionHistory({
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-gray-400">
                 <svg
-                  className="w-24 h-24 mb-4"
+                  className="w-24 h-24 mb-4 flex-shrink-0"
+                  width="96"
+                  height="96"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

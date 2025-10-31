@@ -95,46 +95,46 @@ export default function VoiceInput({
     <button
       onClick={handleToggle}
       disabled={disabled}
-      className={`w-full p-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-3 ${
+      className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center justify-center flex-shrink-0 shadow-sm text-sm border ${
         isListening
-          ? "bg-red-600 hover:bg-red-700 text-white animate-pulse"
+          ? "bg-red-50 text-danger border-danger"
           : disabled
-          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-          : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl"
+          ? "bg-gray-100 text-textMuted cursor-not-allowed border-border"
+          : "bg-surface text-textMain border-border hover:bg-surfaceAlt"
       }`}
+      title={isListening ? "Click to stop" : "Press to speak"}
+      aria-label={isListening ? "Stop recording" : "Start voice input"}
     >
       {isListening ? (
-        <>
-          <svg
-            className="w-6 h-6 animate-pulse"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span>Listening... (Click to stop)</span>
-        </>
+        <svg
+          className="w-5 h-5 flex-shrink-0 animate-pulse"
+          width="20"
+          height="20"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+            clipRule="evenodd"
+          />
+        </svg>
       ) : (
-        <>
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-            />
-          </svg>
-          <span>Press to Speak</span>
-        </>
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+          />
+        </svg>
       )}
     </button>
   );

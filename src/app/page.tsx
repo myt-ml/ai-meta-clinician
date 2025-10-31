@@ -253,7 +253,8 @@ export default function HomePage() {
           onClose={() => setShowHistory(false)}
         />
       )}
-      {/* Screen Reader Announcer */}
+
+      {/* Screen reader live region */}
       <div
         id="sr-announcer"
         className="sr-only"
@@ -261,97 +262,83 @@ export default function HomePage() {
         aria-atomic="true"
       />
 
-      <div className="h-screen flex flex-col overflow-hidden bg-white">
-        {/* Header - Mental Health App Style */}
-        <header className="border-b border-subtle bg-white sticky top-0 z-50">
-          <div className="flex items-center justify-between px-4 py-3 md:px-6">
-            <div className="flex items-center gap-3">
-              <div>
-                <h1 className="font-semibold text-primary">MindCare AI</h1>
-                <p className="text-sm text-gray-600">Mental Health Support</p>
-              </div>
+      <div className="h-screen flex flex-col bg-gray-50 text-textMain">
+        {/* HEADER */}
+        <header className="border-b bg-surface shadow-sm sticky top-0 z-50">
+          <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3 gap-4">
+            {/* Brand */}
+            <div>
+              <h1 className="text-xl font-semibold tracking-tight">
+                Meta-Clinician
+              </h1>
+              <p className="text-xs text-textMuted">
+                Multilingual clinical support system
+              </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Actions */}
+            <div className="flex items-center gap-3">
               <LanguageToggle current={language} onChange={setLanguage} />
+
               <button
                 onClick={() => setShowHistory(true)}
-                className="text-sm font-medium text-primary hover:underline focus:outline-none"
-                aria-label="Open session history"
+                className="text-sm text-primary hover:underline focus:outline-none"
+                aria-label="View session history"
               >
-                History
+                Sessions
               </button>
-              {/* Screening trigger rendered via component */}
+
               <PHQForm onSubmit={handlePHQSubmit} language={language} />
             </div>
           </div>
         </header>
 
-        <div className="flex-1 flex flex-col min-h-0">
-          {/* Control Bar - removed to simplify and reduce cognitive load */}
-          <div className="flex-shrink-0 border-b border-subtle bg-white"></div>
-
-          {/* Risk Alert */}
-          {riskAlert && (
-            <div
-              className={`p-4 rounded-xl border-2 ${
-                riskAlert.level === "critical"
-                  ? "bg-red-50 border-red-600 text-red-900"
-                  : riskAlert.level === "high"
-                  ? "bg-orange-50 border-orange-600 text-orange-900"
-                  : "bg-yellow-50 border-yellow-600 text-yellow-900"
-              }`}
-              role="alert"
-              aria-live="assertive"
-            >
-              <div className="flex items-start gap-3">
-                <svg
-                  className={`w-5 h-5 flex-shrink-0 ${
-                    riskAlert.level === "critical" ? "animate-pulse" : ""
-                  }`}
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div className="flex-1">
-                  <p className="font-semibold text-sm">{riskAlert.message}</p>
+        {/* PAGE BODY */}
+        <main className="flex-1 overflow-hidden">
+          <div className="max-w-5xl mx-auto h-full flex flex-col gap-3 px-4 py-3">
+            {/* RISK ALERT */}
+            {riskAlert && (
+              <div
+                className={`rounded-md border px-4 py-3 text-sm ${
+                  riskAlert.level === "critical"
+                    ? "bg-red-50 border-red-600 text-red-800"
+                    : riskAlert.level === "high"
+                    ? "bg-orange-50 border-orange-500 text-orange-800"
+                    : "bg-yellow-50 border-yellow-600 text-yellow-800"
+                }`}
+                role="alert"
+                aria-live="assertive"
+              >
+                <div className="flex justify-between">
+                  <p className="font-medium">{riskAlert.message}</p>
                   <button
                     onClick={() => setRiskAlert(null)}
-                    className="text-xs underline mt-1 hover:no-underline"
+                    className="text-xs underline hover:no-underline"
                   >
                     Dismiss
                   </button>
                 </div>
               </div>
+            )}
+
+            {/* CHAT PANEL */}
+            <div className="flex-1 min-h-0 bg-surface border rounded-lg shadow-sm flex flex-col">
+              <ChatWindow
+                messages={messages}
+                isLoading={isProcessing}
+                onStarterPromptClick={handleUserInput}
+              />
             </div>
-          )}
 
-          {/* Chat Window - Fixed height with scroll */}
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <ChatWindow
-              messages={messages}
-              isLoading={isProcessing}
-              onStarterPromptClick={handleUserInput}
-            />
-          </div>
+            {/* INPUT + VOICE */}
+            <div className="flex gap-2">
+              <VoiceInput
+                onTranscribed={handleUserInput}
+                language={language}
+                disabled={isProcessing}
+              />
 
-          {/* Input Area - Mental Health App Style */}
-          <div className="border-t border-gray-200/50 bg-white/80 backdrop-blur-md shadow-lg flex-shrink-0">
-            <div className="max-w-4xl mx-auto px-4 py-3">
-              <div className="flex gap-2 items-end">
-                <VoiceInput
-                  onTranscribed={handleUserInput}
-                  language={language}
-                  disabled={isProcessing}
-                />
+              <div className="flex-1 flex flex-col">
                 <textarea
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
@@ -363,64 +350,39 @@ export default function HomePage() {
                   }}
                   placeholder={
                     language === "en"
-                      ? "Type your message here..."
-                      : language === "ar_egy"
-                      ? "اكتب رسالتك هنا..."
-                      : "اكتب رسالتك هنا..."
+                      ? "Type your message..."
+                      : "اكتب رسالتك..."
                   }
                   disabled={isProcessing}
-                  rows={1}
-                  className="flex-1 px-4 py-3 border border-subtle rounded-2xl focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] disabled:bg-gray-50 disabled:cursor-not-allowed transition-all text-sm resize-none shadow-sm bg-white/90"
+                  className="w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary bg-surface shadow-sm"
+                  rows={2}
                 />
-                <button
-                  onClick={() => handleUserInput(inputText)}
-                  disabled={isProcessing || !inputText.trim()}
-                  className="px-4 py-3 bg-[var(--color-primary)] hover:opacity-90 text-white rounded-2xl font-medium disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
-                  title="Send message"
-                  aria-label="Send message"
-                >
-                  <svg
-                    className="w-5 h-5 flex-shrink-0"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
+
+                <div className="flex justify-end mt-2">
+                  <button
+                    onClick={() => handleUserInput(inputText)}
+                    disabled={!inputText.trim() || isProcessing}
+                    className="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium disabled:bg-gray-300 hover:bg-primary-dark transition-colors"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    />
-                  </svg>
-                </button>
+                    Send
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-textMuted mt-1">
+                  Press Enter to send • Shift+Enter for new line
+                </p>
               </div>
-              <p className="text-xs text-gray-500 mt-1.5">
-                Press Enter to send, Shift+Enter for new line
-              </p>
             </div>
           </div>
+        </main>
 
-          {/* Emergency Resources - Sticky Bottom */}
-          <div className="bg-alert border-t-2 border-alert px-4 py-2 text-xs flex-shrink-0">
-            <p className="max-w-4xl mx-auto text-alert">
-              <span className="font-semibold">Emergency:</span>
-              <span className="ml-2">
-                If in immediate danger, call
-                <a href="tel:911" className="underline font-semibold ml-1">
-                  911
-                </a>
-                or crisis helpline
-                <a href="tel:988" className="underline font-semibold ml-1">
-                  988
-                </a>
-                .
-              </span>
-            </p>
+        {/* EMERGENCY FOOTER */}
+        <footer className="bg-danger-soft border-t border-danger text-xs py-2">
+          <div className="max-w-5xl mx-auto px-4 text-danger">
+            Emergency support not provided. If you are in immediate danger,
+            contact local emergency services.
           </div>
-        </div>
+        </footer>
       </div>
     </>
   );

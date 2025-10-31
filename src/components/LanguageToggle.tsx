@@ -39,7 +39,7 @@ export default function LanguageToggle({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+        className="inline-flex items-center justify-center gap-2 rounded-md bg-surface px-3 py-2 text-body font-medium text-textMain border border-border hover:bg-surfaceAlt focus:outline-none focus:ring-2 focus:ring-primary"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls="language-menu"
@@ -48,11 +48,11 @@ export default function LanguageToggle({
         <span className="text-lg">{currentLang.flag}</span>
         <span>{currentLang.label}</span>
         <svg
-          className={`w-5 h-5 flex-shrink-0 transition-transform ${
+          className={`w-4 h-4 flex-shrink-0 transition-transform duration-[var(--motion-duration)] ${
             isOpen ? "rotate-180" : ""
           }`}
-          width="20"
-          height="20"
+          width="16"
+          height="16"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ export default function LanguageToggle({
           {/* Dropdown */}
           <div
             id="language-menu"
-            className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-surface shadow-card border border-border focus:outline-none"
             role="listbox"
             aria-label="Select language"
           >
@@ -87,10 +87,10 @@ export default function LanguageToggle({
                 <button
                   key={lang.code}
                   onClick={() => handleSelect(lang.code)}
-                  className={`flex items-center gap-3 w-full px-4 py-2 text-sm ${
+                  className={`flex items-center gap-3 w-full px-3 py-2 text-body ${
                     current === lang.code
-                      ? "bg-blue-50 text-blue-700 font-semibold"
-                      : "text-gray-700 hover:bg-gray-100"
+                      ? "bg-primary/5 text-primary font-medium"
+                      : "text-textMain hover:bg-surfaceAlt"
                   }`}
                   role="option"
                   aria-selected={current === lang.code}
@@ -99,7 +99,7 @@ export default function LanguageToggle({
                   <span>{lang.label}</span>
                   {current === lang.code && (
                     <svg
-                      className="ml-auto w-4 h-4 flex-shrink-0 text-blue-600"
+                      className="ml-auto w-4 h-4 flex-shrink-0 text-primary"
                       width="16"
                       height="16"
                       fill="currentColor"
