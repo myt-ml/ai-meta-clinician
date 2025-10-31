@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { runEncryptionTests } from "@/lib/__tests__/encryption.test";
 import { runStorageTests } from "@/lib/__tests__/storage.test";
 import { runReasoningTests } from "@/lib/__tests__/reasoning.test";
+import { runLLMTests } from "@/lib/__tests__/llm.test";
 
 interface TestResult {
   totalTests: number;
@@ -27,6 +28,7 @@ export default function TestRunnerPage() {
   const [reasoningResults, setReasoningResults] = useState<TestResult | null>(
     null
   );
+  const [llmResults, setLlmResults] = useState<boolean | null>(null);
   const [running, setRunning] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -57,6 +59,7 @@ export default function TestRunnerPage() {
     setEncryptionResults(null);
     setStorageResults(null);
     setReasoningResults(null);
+    setLlmResults(null);
 
     try {
       // Run encryption tests
@@ -70,6 +73,14 @@ export default function TestRunnerPage() {
       // Run reasoning tests
       const reasoningTestResults = await runReasoningTests();
       setReasoningResults(reasoningTestResults);
+
+      // Run LLM tests
+      try {
+        await runLLMTests();
+        setLlmResults(true);
+      } catch (llmError) {
+        setLlmResults(false);
+      }
     } catch (error) {
       console.error("Test suite error:", error);
     } finally {
@@ -109,8 +120,9 @@ export default function TestRunnerPage() {
         {/* Results Summary */}
         {(encryptionResults !== null ||
           storageResults !== null ||
-          reasoningResults !== null) && (
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          reasoningResults !== null ||
+          llmResults !== null) && (
+          <div className="grid grid-cols-4 gap-4 mb-6">
             {/* Encryption Results */}
             <div
               className={`border rounded-lg p-6 ${
@@ -201,6 +213,33 @@ export default function TestRunnerPage() {
                   : `${reasoningResults.passed}/${reasoningResults.totalTests} tests passed`}
               </p>
             </div>
+
+            {/* LLM Results */}
+            <div
+              className={`border rounded-lg p-6 ${
+                llmResults === null
+                  ? "bg-surface border-border"
+                  : llmResults
+                  ? "bg-green-50 border-green-300"
+                  : "bg-red-50 border-red-300"
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">
+                  {llmResults === null ? "⏳" : llmResults ? "✅" : "❌"}
+                </span>
+                <h3 className="text-h3 font-semibold text-textMain">
+                  LLM Layer
+                </h3>
+              </div>
+              <p className="text-caption text-textSubtle">
+                {llmResults === null
+                  ? "Waiting..."
+                  : llmResults
+                  ? "All LLM tests passed"
+                  : "Some LLM tests failed"}
+              </p>
+            </div>
           </div>
         )}
 
@@ -269,7 +308,8 @@ export default function TestRunnerPage() {
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-body text-textMain">
             <strong>Next Step:</strong> Once all tests pass (encryption,
-            storage, reasoning), we'll proceed to Layer 6 (LLM Plug-in Layer).
+            storage, reasoning, LLM), we'll proceed to Layer 7 (Audit Logging
+            Hooks).
           </p>
         </div>
       </div>

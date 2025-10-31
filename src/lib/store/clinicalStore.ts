@@ -475,6 +475,17 @@ export const useClinicalStore = create<ClinicalStore>()(
           }));
         },
 
+        setLLMProgress: (progress: number, text?: string) => {
+          set((state) => ({
+            llm: {
+              ...state.llm,
+              loadingProgress: progress,
+              loadingText: text,
+              status: progress >= 100 ? "ready" : "loading",
+            },
+          }));
+        },
+
         activateFallback: () => {
           set((state) => ({
             llm: {

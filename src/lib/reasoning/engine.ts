@@ -1,32 +1,111 @@
 /**
- * Offline Fallback Reasoning Engine
+ * Clinical Reasoning Engine
  *
- * Provides clinical decision support when LLM is unavailable.
- * Integrates mhGAP protocols with clinical state store.
+ * Hybrid LLM + Offline Reasoning Architecture
+ * - Attempts LLM inference first (WebLLM or Cloud)
+ * - Gracefully falls back to rule-based mhGAP protocols
+ * - Maintains clinical safety regardless of mode
  */
 
 import type { Message, ClinicalState, Language } from "../store/types";
 import {
   assessMessage,
-  generateClinicalResponse,
+  generateClinicalResponse as generateMhgapResponse,
   interpretPHQ9,
   interpretGAD7,
   ClinicalAssessment,
 } from "./mhgap";
+import {
+  generateResponse as generateLLMResponse,
+  isModelReady,
+  type LLMResponse,
+} from "../llm";
 
 /**
  * Reasoning result
  */
 export interface ReasoningResult {
   response: string;
-  assessment: ClinicalAssessment;
+  assessment?: ClinicalAssessment; // Optional for LLM responses
   shouldEscalate: boolean;
   actionRequired: "emergency" | "urgent" | "routine" | "none";
   metadata: {
-    reasoningMode: "offline" | "llm";
+    reasoningMode: "offline" | "llm" | "hybrid";
+    provider?: string;
     confidence: number;
     timestamp: number;
+    fallbackReason?: string;
   };
+}
+
+/**
+ * Generate clinical response using hybrid LLM + offline architecture
+ *
+ * Flow:
+ * 1. Safety check (always runs offline for crisis detection)
+ * 2. Try LLM if available
+ * 3. Fall back to offline reasoning if LLM fails
+ */
+export async function generateClinicalResponse(
+  userMessage: string,
+  clinicalState: ClinicalState
+): Promise<ReasoningResult> {
+  const { messages, currentRiskLevel, language, llm } = clinicalState;
+
+  // STEP 1: Always run offline safety assessment first
+  const safetyAssessment = assessMessage(
+    userMessage,
+    messages,
+    currentRiskLevel
+  );
+
+  // If crisis detected, ALWAYS use offline protocol (deterministic, immediate)
+  if (safetyAssessment.requiresEmergency) {
+    return generateOfflineResponse(userMessage, clinicalState);
+  }
+
+  // STEP 2: Try LLM if available and not in fallback mode
+  if (isModelReady() && !llm.fallbackActive && llm.status === "ready") {
+    try {
+      const llmResponse = await generateLLMResponse(
+        userMessage,
+        messages,
+        currentRiskLevel,
+        llm.provider
+      );
+
+      // Determine action required based on current risk and assessment
+      let actionRequired: ReasoningResult["actionRequired"] = "none";
+      if (currentRiskLevel === "critical") {
+        actionRequired = "emergency";
+      } else if (currentRiskLevel === "high") {
+        actionRequired = "urgent";
+      } else if (safetyAssessment.protocol.referralNeeded) {
+        actionRequired = "routine";
+      }
+
+      return {
+        response: llmResponse.content,
+        assessment: safetyAssessment, // Still include safety assessment
+        shouldEscalate:
+          safetyAssessment.riskLevel === "high" ||
+          safetyAssessment.riskLevel === "critical",
+        actionRequired,
+        metadata: {
+          reasoningMode: "llm",
+          provider: llmResponse.provider,
+          confidence: llmResponse.confidence ?? 0.8,
+          timestamp: Date.now(),
+        },
+      };
+    } catch (error) {
+      // LLM failed, fall through to offline reasoning
+      console.warn("LLM generation failed, using offline fallback:", error);
+    }
+  }
+
+  // STEP 3: Use offline reasoning (either LLM unavailable or failed)
+  return generateOfflineResponse(userMessage, clinicalState);
 }
 
 /**
@@ -42,7 +121,7 @@ export function generateOfflineResponse(
   const assessment = assessMessage(userMessage, messages, currentRiskLevel);
 
   // 2. GENERATE RESPONSE
-  const response = generateClinicalResponse(assessment, language);
+  const response = generateMhgapResponse(assessment, language);
 
   // 3. DETERMINE ACTION REQUIRED
   let actionRequired: ReasoningResult["actionRequired"] = "none";

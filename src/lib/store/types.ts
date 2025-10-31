@@ -88,6 +88,8 @@ export interface LLMState {
   error?: string;
   lastInference?: number;
   fallbackActive: boolean;
+  loadingProgress?: number; // 0-100
+  loadingText?: string;
 }
 
 export interface AuditEvent {
@@ -179,6 +181,7 @@ export interface ClinicalActions {
   setLLMModel: (modelName: string) => void;
   setLLMStreaming: (isStreaming: boolean) => void;
   setLLMError: (error: string) => void;
+  setLLMProgress: (progress: number, text?: string) => void;
   activateFallback: () => void;
 
   // Audit Actions
