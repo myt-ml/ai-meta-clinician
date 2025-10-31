@@ -140,7 +140,9 @@ export const validationTests: ValidationTest[] = [
       const medical = "I recommend taking this medication for treatment.";
       const nonMedical = "Let's explore some coping strategies together.";
 
-      return containsMedicalAdvice(medical) && !containsMedicalAdvice(nonMedical);
+      return (
+        containsMedicalAdvice(medical) && !containsMedicalAdvice(nonMedical)
+      );
     },
     category: "validation",
   },
@@ -169,8 +171,7 @@ export const validationTests: ValidationTest[] = [
     fn: () => {
       const appropriate =
         "If you're having thoughts of self-harm, please call 988 immediately.";
-      const inappropriate =
-        "Just calm down, it's probably not that serious.";
+      const inappropriate = "Just calm down, it's probably not that serious.";
 
       return (
         isCrisisAppropriate(appropriate) && !isCrisisAppropriate(inappropriate)
@@ -210,7 +211,9 @@ export const validationTests: ValidationTest[] = [
         "Important: I'm an AI assistant and cannot replace professional care.";
       const without = "Let's talk about your feelings.";
 
-      return hasDisclaimer(withDisclaimer, "en") && !hasDisclaimer(without, "en");
+      return (
+        hasDisclaimer(withDisclaimer, "en") && !hasDisclaimer(without, "en")
+      );
     },
     category: "validation",
   },
@@ -289,8 +292,7 @@ export const validationTests: ValidationTest[] = [
   {
     name: "Detect personal information requests",
     fn: () => {
-      const response =
-        "Can you provide your home address and phone number?";
+      const response = "Can you provide your home address and phone number?";
       const result = validateResponse(response, {
         riskLevel: "low",
         language: "en",

@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check:ollama": "curl -s http://localhost:11434/api/version || echo \"❌ Ollama not running. Start with: ollama serve\"",
+    "check:ollama:models": "curl -s http://localhost:11434/api/tags",
+    "setup:ollama:windows": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-ollama-windows.ps1",
+    "setup:ollama:unix": "bash ./scripts/setup-ollama-unix.sh",
+    "test:local": "echo \"🧪 Testing local inference...\" && npm run check:ollama && npm run dev"
   },
   "repository": {
     "type": "git",

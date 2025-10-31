@@ -27,6 +27,12 @@ import {
   sanitizeResponse,
   containsMedicalAdvice,
 } from "../validation";
+import {
+  routeInference,
+  initializeRouter,
+  isOllamaAvailable,
+  runLocalSafetyCheck,
+} from "../llm/router";
 
 /**
  * Reasoning result
@@ -66,19 +72,40 @@ export async function generateClinicalResponse(
     currentRiskLevel
   );
 
+  // STEP 1a: Optional fast local safety check with Ollama (if available)
+  try {
+    const localSafetyCheck = await runLocalSafetyCheck(userMessage);
+    if (!localSafetyCheck.safe) {
+      console.warn("Local safety check flagged:", localSafetyCheck.reason);
+      // Upgrade risk level if needed
+      if (currentRiskLevel === "low") {
+        safetyAssessment.riskLevel = "high";
+      }
+    }
+  } catch (error) {
+    // Ignore safety check failures
+  }
+
   // If crisis detected, ALWAYS use offline protocol (deterministic, immediate)
   if (safetyAssessment.requiresEmergency) {
     return generateOfflineResponse(userMessage, clinicalState);
   }
 
-  // STEP 2: Try LLM if available and not in fallback mode
+  // STEP 2: Try LLM (router will try Ollama first, then WebLLM)
   if (isModelReady() && !llm.fallbackActive && llm.status === "ready") {
     try {
-      const llmResponse = await generateLLMResponse(
+      // Use router for intelligent model selection
+      const llmResponse = await routeInference(
         userMessage,
         messages,
         currentRiskLevel,
-        llm.provider
+        language,
+        "general", // task type
+        {
+          preferLocal: true, // Prefer Ollama over WebLLM
+          allowFallback: true, // Allow WebLLM fallback
+          timeout: 30000,
+        }
       );
 
       // Determine action required based on current risk and assessment

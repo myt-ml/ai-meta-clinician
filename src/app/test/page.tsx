@@ -14,6 +14,7 @@ import { runReasoningTests } from "@/lib/__tests__/reasoning.test";
 import { runLLMTests } from "@/lib/__tests__/llm.test";
 import { runAuditTests } from "@/lib/__tests__/audit.test";
 import { runValidationTests } from "@/lib/__tests__/validation.test";
+import { runOllamaTests } from "@/lib/__tests__/ollama.test";
 
 interface TestResult {
   totalTests: number;
@@ -35,6 +36,7 @@ export default function TestRunnerPage() {
   const [validationResults, setValidationResults] = useState<TestResult | null>(
     null
   );
+  const [ollamaResults, setOllamaResults] = useState<TestResult | null>(null);
   const [running, setRunning] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -68,6 +70,7 @@ export default function TestRunnerPage() {
     setLlmResults(null);
     setAuditResults(null);
     setValidationResults(null);
+    setOllamaResults(null);
 
     try {
       // Run encryption tests
@@ -105,6 +108,19 @@ export default function TestRunnerPage() {
         passed: validationTestResults.passed,
         failed: validationTestResults.failed,
         results: validationTestResults.results.map((r) => ({
+          name: r.name,
+          pass: r.passed,
+          message: r.error || "Test passed",
+        })),
+      });
+
+      // Run Ollama tests
+      const ollamaTestResults = await runOllamaTests();
+      setOllamaResults({
+        totalTests: ollamaTestResults.passed + ollamaTestResults.failed,
+        passed: ollamaTestResults.passed,
+        failed: ollamaTestResults.failed,
+        results: ollamaTestResults.results.map((r) => ({
           name: r.name,
           pass: r.passed,
           message: r.error || "Test passed",
@@ -152,8 +168,9 @@ export default function TestRunnerPage() {
           reasoningResults !== null ||
           llmResults !== null ||
           auditResults !== null ||
-          validationResults !== null) && (
-          <div className="grid grid-cols-6 gap-4 mb-6">
+          validationResults !== null ||
+          ollamaResults !== null) && (
+          <div className="grid grid-cols-7 gap-3 mb-6">
             {/* Encryption Results */}
             <div
               className={`border rounded-lg p-6 ${
@@ -327,6 +344,35 @@ export default function TestRunnerPage() {
                   : `${validationResults.passed}/${validationResults.totalTests} tests passed`}
               </p>
             </div>
+
+            {/* Ollama Results */}
+            <div
+              className={`border rounded-lg p-6 ${
+                ollamaResults === null
+                  ? "bg-surface border-border"
+                  : ollamaResults.passed === ollamaResults.totalTests
+                  ? "bg-green-50 border-green-300"
+                  : "bg-yellow-50 border-yellow-300"
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">
+                  {ollamaResults === null
+                    ? "⏳"
+                    : ollamaResults.passed === ollamaResults.totalTests
+                    ? "✅"
+                    : "⚠️"}
+                </span>
+                <h3 className="text-h3 font-semibold text-textMain">
+                  Ollama (Optional)
+                </h3>
+              </div>
+              <p className="text-caption text-textSubtle">
+                {ollamaResults === null
+                  ? "Waiting..."
+                  : `${ollamaResults.passed}/${ollamaResults.totalTests} tests passed`}
+              </p>
+            </div>
           </div>
         )}
 
@@ -371,6 +417,35 @@ export default function TestRunnerPage() {
                   key={idx}
                   className={`flex items-start gap-3 p-3 rounded ${
                     result.pass ? "bg-green-50" : "bg-red-50"
+                  }`}
+                >
+                  <span className="text-xl">{result.pass ? "✅" : "❌"}</span>
+                  <div className="flex-1">
+                    <div className="font-medium text-textMain">
+                      {result.name}
+                    </div>
+                    <div className="text-sm text-textSubtle">
+                      {result.message}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Ollama Test Details */}
+        {ollamaResults && (
+          <div className="bg-surface border border-border rounded-lg p-6 mb-6">
+            <h3 className="text-h2 font-semibold text-textMain mb-4">
+              Ollama Tests Detailed Results (Optional - Local Inference)
+            </h3>
+            <div className="space-y-2">
+              {ollamaResults.results.map((result, idx) => (
+                <div
+                  key={idx}
+                  className={`flex items-start gap-3 p-3 rounded ${
+                    result.pass ? "bg-green-50" : "bg-yellow-50"
                   }`}
                 >
                   <span className="text-xl">{result.pass ? "✅" : "❌"}</span>
