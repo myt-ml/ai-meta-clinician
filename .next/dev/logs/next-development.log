@@ -1,244 +1,161 @@
-[00:00:01.017] Server  LOG      ✓ Ready in 634ms
-[00:00:22.608] Server  LOG      ○ Compiling /test ...
-[00:00:23.200] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:50.005] Browser LOG     
+[00:00:01.442] Server  LOG      ✓ Ready in 950ms
+[00:00:44.601] Server  LOG      ○ Compiling / ...
+[00:00:46.323] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:31.765] Browser ERROR   uncaughtError: TypeError: session.startTime.toLocaleDateString is not a function
+[00:01:59.884] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:02.194] Browser LOG     
 ═══════════════════════════════════════════════════════
-[00:00:50.005] Browser LOG     🔐 ENCRYPTION LAYER TEST SUITE
-[00:00:50.006] Browser LOG     ═══════════════════════════════════════════════════════
+[00:02:02.194] Browser LOG     🔐 ENCRYPTION LAYER TEST SUITE
+[00:02:02.194] Browser LOG     ═══════════════════════════════════════════════════════
 
-[00:00:50.006] Browser LOG     🧪 Testing basic encryption/decryption...
-[00:00:50.006] Browser LOG       ✓ Encryption successful
-[00:00:50.006] Browser LOG         - IV length: 16
-[00:00:50.006] Browser LOG         - Ciphertext length: 64
-[00:00:50.006] Browser LOG       ✓ Decryption successful
-[00:00:50.006] Browser LOG       ✅ PASS: Plaintext matches original
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG     🧪 Testing basic encryption/decryption...
+[00:02:02.194] Browser LOG       ✓ Encryption successful
+[00:02:02.194] Browser LOG         - IV length: 16
+[00:02:02.194] Browser LOG         - Ciphertext length: 64
+[00:02:02.194] Browser LOG       ✓ Decryption successful
+[00:02:02.194] Browser LOG       ✅ PASS: Plaintext matches original
+[00:02:02.194] Browser LOG     
 🧪 Testing JSON encryption/decryption...
-[00:00:50.006] Browser LOG       ✓ JSON encryption successful
-[00:00:50.006] Browser LOG       ✓ JSON decryption successful
-[00:00:50.006] Browser LOG       ✅ PASS: JSON data matches original
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ JSON encryption successful
+[00:02:02.194] Browser LOG       ✓ JSON decryption successful
+[00:02:02.194] Browser LOG       ✅ PASS: JSON data matches original
+[00:02:02.194] Browser LOG     
 🧪 Testing password-based key derivation...
-[00:00:50.006] Browser LOG       ✓ Salt generated: R6lz3UrSHPGAV4j0A82W...
-[00:00:50.006] Browser LOG       ✓ Key derived from password
-[00:00:50.006] Browser LOG       ✓ Key derived again with same password/salt
-[00:00:50.006] Browser LOG       ✅ PASS: Derived keys are consistent
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ Salt generated: T8EbDnJZFcNWT4oCqKZm...
+[00:02:02.194] Browser LOG       ✓ Key derived from password
+[00:02:02.194] Browser LOG       ✓ Key derived again with same password/salt
+[00:02:02.194] Browser LOG       ✅ PASS: Derived keys are consistent
+[00:02:02.194] Browser LOG     
 🧪 Testing key validation...
-[00:00:50.006] Browser LOG       ✅ PASS: Key validation successful
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✅ PASS: Key validation successful
+[00:02:02.194] Browser LOG     
 🧪 Testing key export/import...
-[00:00:50.006] Browser LOG       ✓ Encrypted with original key
-[00:00:50.006] Browser LOG       ✓ Key exported to JWK
-[00:00:50.006] Browser LOG         - Key type: oct
-[00:00:50.006] Browser LOG         - Algorithm: A256GCM
-[00:00:50.006] Browser LOG       ✓ Key imported from JWK
-[00:00:50.006] Browser LOG       ✅ PASS: Export/import preserves key functionality
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ Encrypted with original key
+[00:02:02.194] Browser LOG       ✓ Key exported to JWK
+[00:02:02.194] Browser LOG         - Key type: oct
+[00:02:02.194] Browser LOG         - Algorithm: A256GCM
+[00:02:02.194] Browser LOG       ✓ Key imported from JWK
+[00:02:02.194] Browser LOG       ✅ PASS: Export/import preserves key functionality
+[00:02:02.194] Browser LOG     
 🧪 Testing authenticated encryption (tamper detection)...
-[00:00:50.006] Browser LOG       ✓ Data encrypted
-[00:00:50.006] Browser LOG       ✓ Tampered data detected and rejected
-[00:00:50.006] Browser LOG       ✅ PASS: Authenticated encryption prevents tampering
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ Data encrypted
+[00:02:02.194] Browser LOG       ✓ Tampered data detected and rejected
+[00:02:02.194] Browser LOG       ✅ PASS: Authenticated encryption prevents tampering
+[00:02:02.194] Browser LOG     
 🧪 Testing unique IV generation...
-[00:00:50.006] Browser LOG       ✓ Different IVs generated: xUtnvmYVOn7yOBVL... vs y9anDs66aAC+GBNF...
-[00:00:50.006] Browser LOG       ✓ Different ciphertexts produced
-[00:00:50.006] Browser LOG       ✅ PASS: Unique IVs ensure different ciphertexts
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ Different IVs generated: XhavgeIeenTgrNDU... vs 7ba2WNMNkkzDSJiL...
+[00:02:02.194] Browser LOG       ✓ Different ciphertexts produced
+[00:02:02.194] Browser LOG       ✅ PASS: Unique IVs ensure different ciphertexts
+[00:02:02.194] Browser LOG     
 ═══════════════════════════════════════════════════════
-[00:00:50.006] Browser LOG     📊 TEST RESULTS: 7/7 tests passed
-[00:00:50.006] Browser LOG     ✅ ALL ENCRYPTION TESTS PASSED
-[00:00:50.006] Browser LOG     ═══════════════════════════════════════════════════════
+[00:02:02.194] Browser LOG     📊 TEST RESULTS: 7/7 tests passed
+[00:02:02.194] Browser LOG     ✅ ALL ENCRYPTION TESTS PASSED
+[00:02:02.194] Browser LOG     ═══════════════════════════════════════════════════════
 
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG     
 ═══════════════════════════════════════════════════════
-[00:00:50.006] Browser LOG     💾 STORAGE LAYER TEST SUITE
-[00:00:50.006] Browser LOG     ═══════════════════════════════════════════════════════
+[00:02:02.194] Browser LOG     💾 STORAGE LAYER TEST SUITE
+[00:02:02.194] Browser LOG     ═══════════════════════════════════════════════════════
 
-[00:00:50.006] Browser LOG     🧪 Testing database initialization...
-[00:00:50.006] Browser LOG       ✓ Database opened successfully
-[00:00:50.006] Browser LOG         - Name: clinical-store
-[00:00:50.006] Browser LOG         - Version: 1
-[00:00:50.006] Browser LOG       ✓ All required stores exist: assessments, audit, keys, messages, sessions
-[00:00:50.006] Browser LOG       ✅ PASS: Database initialized correctly
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG     🧪 Testing database initialization...
+[00:02:02.194] Browser LOG       ✓ Database opened successfully
+[00:02:02.194] Browser LOG         - Name: clinical-store
+[00:02:02.194] Browser LOG         - Version: 1
+[00:02:02.194] Browser LOG       ✓ All required stores exist: assessments, audit, keys, messages, sessions
+[00:02:02.194] Browser LOG       ✅ PASS: Database initialized correctly
+[00:02:02.194] Browser LOG     
 🧪 Testing basic CRUD operations...
-[00:00:50.006] Browser LOG       ✓ CREATE: Data added to store
-[00:00:50.006] Browser LOG       ✓ READ: Data retrieved successfully
-[00:00:50.006] Browser LOG       ✓ UPDATE: Data updated successfully
-[00:00:50.006] Browser LOG       ✓ DELETE: Data deleted successfully
-[00:00:50.006] Browser LOG       ✅ PASS: All CRUD operations successful
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ CREATE: Data added to store
+[00:02:02.194] Browser LOG       ✓ READ: Data retrieved successfully
+[00:02:02.194] Browser LOG       ✓ UPDATE: Data updated successfully
+[00:02:02.194] Browser LOG       ✓ DELETE: Data deleted successfully
+[00:02:02.194] Browser LOG       ✅ PASS: All CRUD operations successful
+[00:02:02.194] Browser LOG     
 🧪 Testing index-based queries...
-[00:00:50.006] Browser LOG       ✓ Test messages added
-[00:00:50.006] Browser LOG       ✓ Query by sessionId returned correct count
-[00:00:50.006] Browser LOG       ✓ Query by role returned correct count
-[00:00:50.006] Browser LOG       ✓ Test data cleaned up
-[00:00:50.006] Browser LOG       ✅ PASS: Index queries work correctly
-[00:00:50.006] Browser LOG     
+[00:02:02.194] Browser LOG       ✓ Test messages added
+[00:02:02.194] Browser LOG       ✓ Query by sessionId returned correct count
+[00:02:02.195] Browser LOG       ✓ Query by role returned correct count
+[00:02:02.195] Browser LOG       ✓ Test data cleaned up
+[00:02:02.195] Browser LOG       ✅ PASS: Index queries work correctly
+[00:02:02.195] Browser LOG     
 🧪 Testing batch operations...
-[00:00:50.006] Browser LOG       ✓ Batch insert: 10 items added
-[00:00:50.006] Browser LOG       ✓ Batch retrieve: All items retrieved
-[00:00:50.006] Browser LOG       ✓ Count: 10 items in store
-[00:00:50.006] Browser LOG       ✓ Clear: Store emptied successfully
-[00:00:50.006] Browser LOG       ✅ PASS: Batch operations successful
-[00:00:50.006] Browser LOG     
+[00:02:02.195] Browser LOG       ✓ Batch insert: 10 items added
+[00:02:02.195] Browser LOG       ✓ Batch retrieve: All items retrieved
+[00:02:02.195] Browser LOG       ✓ Count: 10 items in store
+[00:02:02.195] Browser LOG       ✓ Clear: Store emptied successfully
+[00:02:02.195] Browser LOG       ✅ PASS: Batch operations successful
+[00:02:02.195] Browser LOG     
 🧪 Testing storage integrity...
-[00:00:50.006] Browser LOG       ✓ All data types preserved correctly
-[00:00:50.006] Browser LOG       ✅ PASS: Storage integrity maintained
-[00:00:50.006] Browser LOG     
+[00:02:02.195] Browser LOG       ✓ All data types preserved correctly
+[00:02:02.195] Browser LOG       ✅ PASS: Storage integrity maintained
+[00:02:02.195] Browser LOG     
 ═══════════════════════════════════════════════════════
-[00:00:50.006] Browser LOG     📊 TEST RESULTS: 5/5 tests passed
-[00:00:50.006] Browser LOG     ✅ ALL STORAGE TESTS PASSED
-[00:00:50.006] Browser LOG     ═══════════════════════════════════════════════════════
+[00:02:02.195] Browser LOG     📊 TEST RESULTS: 5/5 tests passed
+[00:02:02.195] Browser LOG     ✅ ALL STORAGE TESTS PASSED
+[00:02:02.195] Browser LOG     ═══════════════════════════════════════════════════════
 
-[00:00:50.006] Browser LOG     Running: Crisis Detection...
-[00:00:50.006] Browser LOG     ✓ Crisis Detection: Crisis detection working correctly
-[00:00:50.006] Browser LOG     Running: Depression Detection...
-[00:00:50.006] Browser LOG     ✓ Depression Detection: Depression detection working correctly
-[00:00:50.006] Browser LOG     Running: Anxiety Detection...
-[00:00:50.006] Browser LOG     ✓ Anxiety Detection: Anxiety detection working correctly
-[00:00:50.006] Browser LOG     Running: Self-Harm Detection...
-[00:00:50.006] Browser LOG     ✓ Self-Harm Detection: Self-harm detection working correctly
-[00:00:50.006] Browser LOG     Running: PHQ-9 Interpretation...
-[00:00:50.006] Browser LOG     ✓ PHQ-9 Interpretation: PHQ-9 interpretation working correctly
-[00:00:50.006] Browser LOG     Running: GAD-7 Interpretation...
-[00:00:50.006] Browser LOG     ✓ GAD-7 Interpretation: GAD-7 interpretation working correctly
-[00:00:50.006] Browser LOG     Running: Offline Response Generation...
-[00:00:50.006] Browser LOG     ✓ Offline Response Generation: Offline response generation working correctly
-[00:00:50.006] Browser LOG     Running: Multilingual Crisis...
-[00:00:50.006] Browser LOG     ✓ Multilingual Crisis: Multilingual crisis detection working correctly
-[00:00:50.007] Browser LOG     🧪 Running LLM Layer Tests...
+[00:02:02.195] Browser LOG     Running: Crisis Detection...
+[00:02:02.195] Browser LOG     ✓ Crisis Detection: Crisis detection working correctly
+[00:02:02.195] Browser LOG     Running: Depression Detection...
+[00:02:02.195] Browser LOG     ✓ Depression Detection: Depression detection working correctly
+[00:02:02.195] Browser LOG     Running: Anxiety Detection...
+[00:02:02.195] Browser LOG     ✓ Anxiety Detection: Anxiety detection working correctly
+[00:02:02.195] Browser LOG     Running: Self-Harm Detection...
+[00:02:02.195] Browser LOG     ✓ Self-Harm Detection: Self-harm detection working correctly
+[00:02:02.195] Browser LOG     Running: PHQ-9 Interpretation...
+[00:02:02.195] Browser LOG     ✓ PHQ-9 Interpretation: PHQ-9 interpretation working correctly
+[00:02:02.195] Browser LOG     Running: GAD-7 Interpretation...
+[00:02:02.195] Browser LOG     ✓ GAD-7 Interpretation: GAD-7 interpretation working correctly
+[00:02:02.195] Browser LOG     Running: Offline Response Generation...
+[00:02:02.195] Browser LOG     ✓ Offline Response Generation: Offline response generation working correctly
+[00:02:02.195] Browser LOG     Running: Multilingual Crisis...
+[00:02:02.195] Browser LOG     ✓ Multilingual Crisis: Multilingual crisis detection working correctly
+[00:02:02.195] Browser LOG     🧪 Running LLM Layer Tests...
 
-[00:00:50.007] Browser LOG     ✓ LLM Module Structure
-[00:00:50.007] Browser LOG     ✓ LLM Type Definitions
-[00:00:50.007] Browser LOG     ✓ Clinical Prompt Building
-[00:00:50.007] Browser LOG     ✓ Crisis Prompt Override
-[00:00:50.007] Browser LOG     ✓ Model Availability Check
-[00:00:50.007] Browser LOG     ✓ Assessment Prompt Generation
-[00:00:50.007] Browser LOG     
+[00:02:02.195] Browser LOG     ✓ LLM Module Structure
+[00:02:02.195] Browser LOG     ✓ LLM Type Definitions
+[00:02:02.195] Browser LOG     ✓ Clinical Prompt Building
+[00:02:02.195] Browser LOG     ✓ Crisis Prompt Override
+[00:02:02.195] Browser LOG     ✓ Model Availability Check
+[00:02:02.195] Browser LOG     ✓ Assessment Prompt Generation
+[00:02:02.195] Browser LOG     
 ==================================================
-[00:00:50.007] Browser LOG     LLM Tests: 6 passed, 0 failed
-[00:00:50.007] Browser LOG     ==================================================
+[00:02:02.195] Browser LOG     LLM Tests: 6 passed, 0 failed
+[00:02:02.195] Browser LOG     ==================================================
 
-[00:00:57.083] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:59.115] Browser LOG     
-═══════════════════════════════════════════════════════
-[00:00:59.115] Browser LOG     🔐 ENCRYPTION LAYER TEST SUITE
-[00:00:59.115] Browser LOG     ═══════════════════════════════════════════════════════
+[00:02:02.195] Browser LOG     🧪 Running Audit Layer Tests...
 
-[00:00:59.115] Browser LOG     🧪 Testing basic encryption/decryption...
-[00:00:59.115] Browser LOG       ✓ Encryption successful
-[00:00:59.115] Browser LOG         - IV length: 16
-[00:00:59.115] Browser LOG         - Ciphertext length: 64
-[00:00:59.115] Browser LOG       ✓ Decryption successful
-[00:00:59.115] Browser LOG       ✅ PASS: Plaintext matches original
-[00:00:59.115] Browser LOG     
-🧪 Testing JSON encryption/decryption...
-[00:00:59.115] Browser LOG       ✓ JSON encryption successful
-[00:00:59.115] Browser LOG       ✓ JSON decryption successful
-[00:00:59.115] Browser LOG       ✅ PASS: JSON data matches original
-[00:00:59.115] Browser LOG     
-🧪 Testing password-based key derivation...
-[00:00:59.115] Browser LOG       ✓ Salt generated: 1D8AuAa0dZh56b2NmAZW...
-[00:00:59.115] Browser LOG       ✓ Key derived from password
-[00:00:59.115] Browser LOG       ✓ Key derived again with same password/salt
-[00:00:59.115] Browser LOG       ✅ PASS: Derived keys are consistent
-[00:00:59.115] Browser LOG     
-🧪 Testing key validation...
-[00:00:59.115] Browser LOG       ✅ PASS: Key validation successful
-[00:00:59.115] Browser LOG     
-🧪 Testing key export/import...
-[00:00:59.115] Browser LOG       ✓ Encrypted with original key
-[00:00:59.115] Browser LOG       ✓ Key exported to JWK
-[00:00:59.115] Browser LOG         - Key type: oct
-[00:00:59.115] Browser LOG         - Algorithm: A256GCM
-[00:00:59.115] Browser LOG       ✓ Key imported from JWK
-[00:00:59.115] Browser LOG       ✅ PASS: Export/import preserves key functionality
-[00:00:59.115] Browser LOG     
-🧪 Testing authenticated encryption (tamper detection)...
-[00:00:59.115] Browser LOG       ✓ Data encrypted
-[00:00:59.115] Browser LOG       ✓ Tampered data detected and rejected
-[00:00:59.115] Browser LOG       ✅ PASS: Authenticated encryption prevents tampering
-[00:00:59.115] Browser LOG     
-🧪 Testing unique IV generation...
-[00:00:59.115] Browser LOG       ✓ Different IVs generated: sE2rsromBdKVHNAp... vs wPYaqP5GNjyl7UAh...
-[00:00:59.115] Browser LOG       ✓ Different ciphertexts produced
-[00:00:59.115] Browser LOG       ✅ PASS: Unique IVs ensure different ciphertexts
-[00:00:59.115] Browser LOG     
-═══════════════════════════════════════════════════════
-[00:00:59.115] Browser LOG     📊 TEST RESULTS: 7/7 tests passed
-[00:00:59.115] Browser LOG     ✅ ALL ENCRYPTION TESTS PASSED
-[00:00:59.115] Browser LOG     ═══════════════════════════════════════════════════════
-
-[00:00:59.116] Browser LOG     
-═══════════════════════════════════════════════════════
-[00:00:59.116] Browser LOG     💾 STORAGE LAYER TEST SUITE
-[00:00:59.116] Browser LOG     ═══════════════════════════════════════════════════════
-
-[00:00:59.116] Browser LOG     🧪 Testing database initialization...
-[00:00:59.116] Browser LOG       ✓ Database opened successfully
-[00:00:59.116] Browser LOG         - Name: clinical-store
-[00:00:59.116] Browser LOG         - Version: 1
-[00:00:59.116] Browser LOG       ✓ All required stores exist: assessments, audit, keys, messages, sessions
-[00:00:59.116] Browser LOG       ✅ PASS: Database initialized correctly
-[00:00:59.116] Browser LOG     
-🧪 Testing basic CRUD operations...
-[00:00:59.116] Browser LOG       ✓ CREATE: Data added to store
-[00:00:59.116] Browser LOG       ✓ READ: Data retrieved successfully
-[00:00:59.116] Browser LOG       ✓ UPDATE: Data updated successfully
-[00:00:59.116] Browser LOG       ✓ DELETE: Data deleted successfully
-[00:00:59.116] Browser LOG       ✅ PASS: All CRUD operations successful
-[00:00:59.116] Browser LOG     
-🧪 Testing index-based queries...
-[00:00:59.116] Browser LOG       ✓ Test messages added
-[00:00:59.116] Browser LOG       ✓ Query by sessionId returned correct count
-[00:00:59.116] Browser LOG       ✓ Query by role returned correct count
-[00:00:59.116] Browser LOG       ✓ Test data cleaned up
-[00:00:59.116] Browser LOG       ✅ PASS: Index queries work correctly
-[00:00:59.116] Browser LOG     
-🧪 Testing batch operations...
-[00:00:59.116] Browser LOG       ✓ Batch insert: 10 items added
-[00:00:59.116] Browser LOG       ✓ Batch retrieve: All items retrieved
-[00:00:59.116] Browser LOG       ✓ Count: 10 items in store
-[00:00:59.116] Browser LOG       ✓ Clear: Store emptied successfully
-[00:00:59.116] Browser LOG       ✅ PASS: Batch operations successful
-[00:00:59.116] Browser LOG     
-🧪 Testing storage integrity...
-[00:00:59.116] Browser LOG       ✓ All data types preserved correctly
-[00:00:59.116] Browser LOG       ✅ PASS: Storage integrity maintained
-[00:00:59.116] Browser LOG     
-═══════════════════════════════════════════════════════
-[00:00:59.116] Browser LOG     📊 TEST RESULTS: 5/5 tests passed
-[00:00:59.116] Browser LOG     ✅ ALL STORAGE TESTS PASSED
-[00:00:59.116] Browser LOG     ═══════════════════════════════════════════════════════
-
-[00:00:59.116] Browser LOG     Running: Crisis Detection...
-[00:00:59.116] Browser LOG     ✓ Crisis Detection: Crisis detection working correctly
-[00:00:59.116] Browser LOG     Running: Depression Detection...
-[00:00:59.116] Browser LOG     ✓ Depression Detection: Depression detection working correctly
-[00:00:59.116] Browser LOG     Running: Anxiety Detection...
-[00:00:59.116] Browser LOG     ✓ Anxiety Detection: Anxiety detection working correctly
-[00:00:59.116] Browser LOG     Running: Self-Harm Detection...
-[00:00:59.116] Browser LOG     ✓ Self-Harm Detection: Self-harm detection working correctly
-[00:00:59.116] Browser LOG     Running: PHQ-9 Interpretation...
-[00:00:59.116] Browser LOG     ✓ PHQ-9 Interpretation: PHQ-9 interpretation working correctly
-[00:00:59.116] Browser LOG     Running: GAD-7 Interpretation...
-[00:00:59.116] Browser LOG     ✓ GAD-7 Interpretation: GAD-7 interpretation working correctly
-[00:00:59.116] Browser LOG     Running: Offline Response Generation...
-[00:00:59.116] Browser LOG     ✓ Offline Response Generation: Offline response generation working correctly
-[00:00:59.116] Browser LOG     Running: Multilingual Crisis...
-[00:00:59.116] Browser LOG     ✓ Multilingual Crisis: Multilingual crisis detection working correctly
-[00:00:59.116] Browser LOG     🧪 Running LLM Layer Tests...
-
-[00:00:59.116] Browser LOG     ✓ LLM Module Structure
-[00:00:59.116] Browser LOG     ✓ LLM Type Definitions
-[00:00:59.116] Browser LOG     ✓ Clinical Prompt Building
-[00:00:59.116] Browser LOG     ✓ Crisis Prompt Override
-[00:00:59.116] Browser LOG     ✓ Model Availability Check
-[00:00:59.116] Browser LOG     ✓ Assessment Prompt Generation
-[00:00:59.116] Browser LOG     
+[00:02:02.195] Browser LOG     ✓ Audit Module Structure
+[00:02:02.195] Browser LOG     ✓ Audit Event Creation
+[00:02:02.195] Browser LOG     [AUDIT] INFO - session:test_create {"action":"test_create","category":"session","complianceLevel":"standard","description":"Test audit event","encrypted":true,"id":"audit_1761900560222_ptiazodc9","metadata":{"test":true},"piiPresent":false,"sessionId":"test-session-1","severity":"info","timestamp":1761900560222}
+[00:02:02.195] Browser LOG     ✓ Clinical Decision Logging
+[00:02:02.195] Browser LOG     [AUDIT] INFO - assessment:clinical_decision {"action":"clinical_decision","category":"assessment","clinicalContext":{"decision":{"basedOn":["GAD-7 score","Conversation analysis"],"confidence":0.75,"reasoning":"Patient shows symptoms of moderate anxiety","type":"assessment"}},"complianceLevel":"hipaa","description":"Patient shows symptoms of moderate anxiety","encrypted":true,"id":"audit_1761900560223_l2mopagr5","metadata":{"confidence":0.75,"decisionType":"assessment"},"piiPresent":false,"sessionId":"test-session-2","severity":"info","timestamp":1761900560223}
+[00:02:02.195] Browser LOG     ✓ Safety Escalation Logging
+[00:02:02.195] Browser LOG     [AUDIT] WARNING - safety:risk_escalation {"action":"risk_escalation","category":"safety","complianceLevel":"hipaa","description":"Risk escalated to high","encrypted":true,"id":"audit_1761900560223_d3t0r2l4f","metadata":{"riskLevel":"high","trigger":"suicide ideation keywords"},"piiPresent":false,"sessionId":"test-session-3","severity":"warning","timestamp":1761900560223}
+[00:02:02.195] Browser LOG     ✓ Audit Query Filtering
+[00:02:02.195] Browser LOG     [AUDIT] Flushed 3 events to storage
+[00:02:02.369] Browser LOG     ✓ Audit Export
+[00:02:02.369] Browser LOG     ✓ Compliance Level Tagging
+[00:02:02.369] Browser LOG     [AUDIT] INFO - assessment:phq9_complete {"action":"phq9_complete","category":"assessment","complianceLevel":"hipaa","description":"PHQ-9 assessment completed","encrypted":true,"id":"audit_1761900560351_gajdb00ih","piiPresent":false,"sessionId":"test-session-4","severity":"info","timestamp":1761900560351}
+[00:02:02.369] Browser LOG     ✓ Event Correlation
+[00:02:02.369] Browser LOG     [AUDIT] INFO - message:user_input {"action":"user_input","category":"message","complianceLevel":"standard","correlationId":"corr_1761900560351","encrypted":true,"id":"audit_1761900560351_6tmq9q3dp","piiPresent":false,"sessionId":"test-session-5","severity":"info","timestamp":1761900560351}
+[00:02:02.369] Browser LOG     [AUDIT] INFO - message:ai_response {"action":"ai_response","category":"message","complianceLevel":"standard","correlationId":"corr_1761900560351","encrypted":true,"id":"audit_1761900560351_e4f1lkyn4","piiPresent":false,"sessionId":"test-session-5","severity":"info","timestamp":1761900560351}
+[00:02:02.369] Browser LOG     
 ==================================================
-[00:00:59.116] Browser LOG     LLM Tests: 6 passed, 0 failed
-[00:00:59.116] Browser LOG     ==================================================
+[00:02:02.369] Browser LOG     Audit Tests: 8 passed, 0 failed
+[00:02:02.369] Browser LOG     ==================================================
 
+[00:02:02.369] Browser LOG     Ollama health: {"available":true,"models":["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"],"version":"0.12.6"}
+[00:02:02.369] Browser LOG     ✅ Ollama available with models: ["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"]
+[00:02:02.369] Browser LOG     Ollama available: true
+[00:02:02.369] Browser LOG     ✅ Ollama available with models: ["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"]
+[00:02:02.369] Browser LOG     Available Ollama models: ["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"]
+[00:02:02.369] Browser LOG     Missing models: []
+[00:02:02.369] Browser LOG     ✅ Ollama available with models: ["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"]
+[00:02:07.383] Browser LOG     [AUDIT] Flushed 3 events to storage
+[00:02:07.383] Browser WARN    Local safety check failed: {}
+[00:02:07.383] Browser LOG     Safety check result: {"safe":true}
+[00:02:19.034] Browser LOG     Ollama query failed: {}
+[00:02:19.034] Browser LOG     Recommended models: ["llama3.2:3b","qwen2.5:1.5b","phi3:mini","smollm:1.7b"]
+[00:02:19.034] Browser LOG     ✅ Ollama available with models: ["smollm:1.7b","phi3:mini","qwen2.5:1.5b","llama3.2:3b"]
+[00:02:19.034] Browser LOG     ✅ Ollama available for local inference

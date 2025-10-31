@@ -67,7 +67,10 @@ export const ollamaTests: OllamaTest[] = [
     name: "Identify missing recommended models",
     fn: async () => {
       const missing = await getMissingModels();
-      console.log("Missing models:", missing.map((m) => m.name));
+      console.log(
+        "Missing models:",
+        missing.map((m) => m.name)
+      );
       return Array.isArray(missing);
     },
     category: "ollama",
@@ -115,7 +118,9 @@ export const ollamaTests: OllamaTest[] = [
       );
 
       if (!availableModel) {
-        console.log("No recommended models available - skipping inference test");
+        console.log(
+          "No recommended models available - skipping inference test"
+        );
         return true; // Pass if no models
       }
 
@@ -139,7 +144,10 @@ export const ollamaTests: OllamaTest[] = [
   {
     name: "Recommended models list",
     fn: () => {
-      console.log("Recommended models:", OLLAMA_MODELS.map((m) => m.name));
+      console.log(
+        "Recommended models:",
+        OLLAMA_MODELS.map((m) => m.name)
+      );
       return OLLAMA_MODELS.length === 4;
     },
     category: "ollama",

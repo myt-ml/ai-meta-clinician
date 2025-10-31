@@ -22,7 +22,12 @@ import { buildPrompt, buildCrisisPrompt } from "./prompts";
 /**
  * Task types for model selection
  */
-export type TaskType = "general" | "arabic" | "safety" | "crisis" | "assessment";
+export type TaskType =
+  | "general"
+  | "arabic"
+  | "safety"
+  | "crisis"
+  | "assessment";
 
 /**
  * Model selection strategy
@@ -136,15 +141,11 @@ export async function routeInference(
         console.log(`🚀 Using Ollama model: ${selectedModel.displayName}`);
 
         const startTime = Date.now();
-        const response = await ollamaQuery(
-          selectedModel.name,
-          prompt,
-          {
-            temperature: 0.7,
-            maxTokens: 1000,
-            timeout: strategy.timeout,
-          }
-        );
+        const response = await ollamaQuery(selectedModel.name, prompt, {
+          temperature: 0.7,
+          maxTokens: 1000,
+          timeout: strategy.timeout,
+        });
         const duration = Date.now() - startTime;
 
         return {
@@ -214,9 +215,7 @@ export function getRecommendedModels(): OllamaModel[] {
 export async function getMissingModels(): Promise<OllamaModel[]> {
   await refreshHealthCheck();
 
-  return OLLAMA_MODELS.filter(
-    (model) => !ollamaModels.includes(model.name)
-  );
+  return OLLAMA_MODELS.filter((model) => !ollamaModels.includes(model.name));
 }
 
 /**

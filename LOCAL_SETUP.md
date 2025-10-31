@@ -7,10 +7,12 @@
 ## 📋 Overview
 
 This app now supports **dual-mode inference**:
+
 1. **Ollama (Local)** - Fast, private inference on your machine (preferred)
 2. **WebLLM (Browser)** - Fallback when Ollama unavailable
 
 **Benefits of local inference**:
+
 - ⚡ Faster responses (native CPU/GPU vs browser)
 - 🔒 Complete privacy (nothing leaves your machine)
 - 💾 Lower memory usage (optimized models)
@@ -36,6 +38,7 @@ npm run setup:ollama:windows
 ```
 
 This script will:
+
 - Create `E:\ai\` directory structure
 - Set `OLLAMA_HOME=E:\ai\ollama` environment variable
 - Download 4 recommended models (~6GB total):
@@ -92,6 +95,7 @@ npm run setup:ollama:unix
 ```
 
 This will:
+
 - Install Ollama (via Homebrew on Mac, curl on Linux)
 - Start Ollama server
 - Download 4 recommended models
@@ -144,21 +148,25 @@ npm run dev
 Navigate to: `http://localhost:3000/test`
 
 Click **"Run All Tests"** and check:
+
 - ✅ **Ollama (Optional)** - Should show 8/8 tests passed if Ollama is running
 - ⚠️ If Ollama unavailable, tests will pass with warnings (graceful degradation)
 
 ### 3. Check Console
 
 Look for these messages:
+
 ```
 ✅ Ollama available with models: [...list of models...]
 🚀 Using Ollama model: Llama 3.2 3B
 ```
 
 If you see:
+
 ```
 ⚠️ Ollama not available, will use WebLLM fallback
 ```
+
 Then Ollama isn't running - start it with `ollama serve`
 
 ---
@@ -167,12 +175,12 @@ Then Ollama isn't running - start it with `ollama serve`
 
 The app intelligently routes requests based on:
 
-| Task Type | Preferred Model | Fallback |
-|-----------|----------------|----------|
-| General clinical | `llama3.2:3b` | WebLLM |
-| Arabic language | `qwen2.5:1.5b` | Llama 3.2 |
-| Safety checks | `phi3:mini` | Skip (optional) |
-| Crisis situations | **Offline protocols** (no LLM) | N/A |
+| Task Type         | Preferred Model                | Fallback        |
+| ----------------- | ------------------------------ | --------------- |
+| General clinical  | `llama3.2:3b`                  | WebLLM          |
+| Arabic language   | `qwen2.5:1.5b`                 | Llama 3.2       |
+| Safety checks     | `phi3:mini`                    | Skip (optional) |
+| Crisis situations | **Offline protocols** (no LLM) | N/A             |
 
 **Crisis handling is always offline** for deterministic, immediate response.
 
@@ -181,6 +189,7 @@ The app intelligently routes requests based on:
 ## 🔧 Useful Commands
 
 ### Check Ollama Status
+
 ```bash
 # Windows
 npm run check:ollama
@@ -190,6 +199,7 @@ curl http://localhost:11434/api/version
 ```
 
 ### Manage Models
+
 ```bash
 # List installed models
 ollama list
@@ -208,6 +218,7 @@ ollama show llama3.2:3b
 ```
 
 ### Troubleshooting
+
 ```bash
 # Stop Ollama
 # Windows:
@@ -234,17 +245,20 @@ curl http://localhost:11434/api/generate -d '{
 ## 💾 Storage Requirements
 
 ### Recommended Models (Total: ~6.3GB)
+
 - `llama3.2:3b` - 2GB
 - `qwen2.5:1.5b` - 1GB
 - `phi3:mini` - 2.3GB
 - `smollm:1.7b` - 1GB
 
 ### Optional Models
+
 - `llama3.2:1b` - 0.9GB (even faster, less accurate)
 - `mistral:7b` - 4.1GB (better quality, slower)
 - `codellama:7b` - 3.8GB (code generation)
 
 ### Storage Locations
+
 - **Windows**: `E:\ai\ollama\models` (configurable)
 - **macOS**: `~/.ollama/models`
 - **Linux**: `~/.ollama/models`
@@ -254,6 +268,7 @@ curl http://localhost:11434/api/generate -d '{
 ## 🔒 Privacy & Security
 
 ### Local Inference Benefits
+
 - ✅ All inference happens on your machine
 - ✅ No data sent to external servers
 - ✅ HIPAA-compliant (when used with encryption layer)
@@ -261,6 +276,7 @@ curl http://localhost:11434/api/generate -d '{
 - ✅ Complete audit trail in IndexedDB
 
 ### Data Flow
+
 ```
 User Message
     ↓
@@ -280,6 +296,7 @@ Encrypted Storage (IndexedDB)
 ## 🚨 Troubleshooting
 
 ### Ollama Not Starting
+
 ```bash
 # Check if port 11434 is in use
 # Windows:
@@ -300,6 +317,7 @@ ollama serve
 ```
 
 ### Models Not Downloading
+
 ```bash
 # Check disk space
 # Windows:
@@ -316,6 +334,7 @@ OLLAMA_DEBUG=1 ollama pull llama3.2:3b
 ```
 
 ### Slow Inference
+
 ```bash
 # Check running models
 ollama ps
@@ -328,6 +347,7 @@ ollama pull llama3.2:1b
 ```
 
 ### Permission Errors (Windows)
+
 ```powershell
 # Run PowerShell as Administrator
 # Then:
@@ -339,11 +359,13 @@ npm run setup:ollama:windows
 ## 🎯 Performance Optimization
 
 ### Hardware Recommendations
+
 - **Minimum**: 8GB RAM, 10GB free disk
 - **Recommended**: 16GB RAM, 50GB free disk, GPU (optional)
 - **Optimal**: 32GB RAM, NVMe SSD, NVIDIA GPU
 
 ### GPU Acceleration (Optional)
+
 ```bash
 # NVIDIA GPU (CUDA)
 # Models automatically use GPU if available
@@ -357,6 +379,7 @@ watch -n 1 nvidia-smi
 ```
 
 ### Memory Management
+
 ```bash
 # Show Ollama memory usage
 ollama ps
@@ -395,6 +418,7 @@ The app automatically handles fallback:
 ## ✅ Checklist
 
 Before starting development:
+
 - [ ] Ollama installed and running (`ollama serve`)
 - [ ] 4 recommended models downloaded (`ollama list`)
 - [ ] Environment variable set (Windows: `OLLAMA_HOME`)
@@ -409,6 +433,7 @@ Before starting development:
 Your app is now configured for **fast, private, local-first inference**.
 
 Start the dev server and enjoy:
+
 ```bash
 npm run dev
 ```
