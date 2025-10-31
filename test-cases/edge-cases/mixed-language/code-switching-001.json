@@ -1,0 +1,31 @@
+{
+  "id": "EDGE-MIX-001",
+  "language": "mixed",
+  "riskLevel": "mild",
+  "category": "code-switching",
+  "scenario": "English-Arabic code-switching within single message",
+  "userInput": "I'm feeling really anxious اليومين دول. مش عارف why I feel this way.",
+  "expectedAssessment": {
+    "riskLevel": "low",
+    "conditions": ["anxiety"],
+    "triageCategory": "routine",
+    "requiresEmergency": false,
+    "confidence": 0.7,
+    "detectedLanguages": ["en", "ar"]
+  },
+  "expectedResponse": {
+    "containsValidation": true,
+    "containsPsychoeducation": true,
+    "handlesMixedLanguage": true,
+    "tone": "supportive",
+    "primaryResponseLanguage": "en"
+  },
+  "metadata": {
+    "createdDate": "2025-10-31",
+    "validatedBy": "clinical-supervisor",
+    "validationDate": "2025-10-31",
+    "notes": "Code-switching common in bilingual users - system should handle gracefully",
+    "tags": ["mixed-language", "code-switching", "bilingual", "anxiety"],
+    "trainingNote": "Respond in majority language or offer language preference"
+  }
+}
