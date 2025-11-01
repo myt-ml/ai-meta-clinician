@@ -97,7 +97,9 @@ export default function LanguageSelectorPage() {
                 className="group block border-2 border-gray-200 rounded-lg p-6 bg-white transition-all duration-200 hover:border-primary hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <div className="text-center">
-                  <div className="text-6xl mb-4" aria-hidden>{lang.flag}</div>
+                  <div className="text-6xl mb-4" aria-hidden>
+                    {lang.flag}
+                  </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     {lang.nativeName}
                   </h3>
