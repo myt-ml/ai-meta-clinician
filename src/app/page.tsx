@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { getLanguageCode } from "@/lib/i18n/translations";
+import { logUIEvent } from "@/lib/telemetry/ui";
 
 export default function LanguageSelectorPage() {
+  const router = useRouter();
   const languages = [
     {
-      code: "en",
+      code: "en" as const,
       name: "English",
       nativeName: "English",
       flag: "🇬🇧",
@@ -14,7 +18,7 @@ export default function LanguageSelectorPage() {
       path: "/en",
     },
     {
-      code: "ar",
+      code: "ar" as const,
       name: "Modern Standard Arabic",
       nativeName: "العربية الفصحى",
       flag: "🇸🇦",
@@ -22,7 +26,7 @@ export default function LanguageSelectorPage() {
       path: "/ar",
     },
     {
-      code: "ar-egy",
+      code: "ar-egy" as const,
       name: "Egyptian Arabic",
       nativeName: "العامية المصرية",
       flag: "🇪🇬",
@@ -31,8 +35,18 @@ export default function LanguageSelectorPage() {
     },
   ];
 
+  // Prefetch language routes for snappy navigation
+  useEffect(() => {
+    router.prefetch("/en");
+    router.prefetch("/ar");
+    router.prefetch("/ar-egy");
+  }, [router]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white" lang="en">
+    <div
+      className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white"
+      lang="en"
+    >
       {/* Header */}
       <header className="py-8">
         <div className="container mx-auto px-4 text-center">
@@ -70,18 +84,31 @@ export default function LanguageSelectorPage() {
               <Link
                 key={lang.code}
                 href={lang.path}
-                className="block border-2 border-gray-200 rounded-lg p-6 hover:border-primary hover:shadow-lg transition-all duration-200 bg-white"
+                aria-label={`Start ${lang.name} session`}
+                title={`Start ${lang.name} session`}
+                onClick={() => {
+                  // Fire-and-forget UI telemetry
+                  void logUIEvent({
+                    type: "language_selected",
+                    language: lang.code,
+                    timestamp: Date.now(),
+                  });
+                }}
+                className="group block border-2 border-gray-200 rounded-lg p-6 bg-white transition-all duration-200 hover:border-primary hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <div className="text-center">
-                  <div className="text-6xl mb-4">{lang.flag}</div>
+                  <div className="text-6xl mb-4" aria-hidden>{lang.flag}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     {lang.nativeName}
                   </h3>
                   <p className="text-sm text-gray-600 mb-3">{lang.name}</p>
                   <p className="text-xs text-gray-500">{lang.description}</p>
-                  <div className="mt-4 inline-block px-4 py-2 bg-primary text-white rounded text-sm">
+                  <span
+                    className="mt-4 inline-block px-4 py-2 bg-primary text-white rounded text-sm shadow-sm group-hover:shadow focus-visible:outline-none"
+                    aria-hidden
+                  >
                     Start Session →
-                  </div>
+                  </span>
                 </div>
               </Link>
             ))}
