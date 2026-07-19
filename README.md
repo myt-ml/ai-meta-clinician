@@ -140,7 +140,7 @@ Provide affordable, high-quality mental health care to extremely low-income coun
 
 ```bash
 # Clone the repository
-git clone https://github.com/hanameltahan-cloud/ai-meta-clinician.git
+git clone https://github.com/myt-ml/ai-meta-clinician.git
 cd ai-meta-clinician
 
 # Install dependencies
