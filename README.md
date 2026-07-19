@@ -410,8 +410,8 @@ MIT License - See LICENSE file for details
 
 ## 📞 Contact & Support
 
-- **Repository**: [github.com/hanameltahan-cloud/ai-meta-clinician](https://github.com/hanameltahan-cloud/ai-meta-clinician)
-- **Issues**: [GitHub Issues](https://github.com/hanameltahan-cloud/ai-meta-clinician/issues)
+- **Repository**: [github.com/github.com/myt-ml/ai-meta-clinician](github.com/myt-ml/ai-meta-clinician)
+- **Issues**: [GitHub Issues](github.com/myt-ml/ai-meta-clinician/issues)
 - **Documentation**: See `AI_META_CLINICIAN_PROJECT_CONTEXT.md`
 
 ---
